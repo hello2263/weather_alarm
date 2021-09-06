@@ -9,25 +9,10 @@ from urllib.parse import urlencode, unquote, quote_plus
 from datetime import datetime
 import json
 import pymysql
+import weather_db
 # import pandas as pd
 
-# DB 접근 설정
-db_user = "root"
-db_password = "qwe123"
 count = 0
-
-##################################################### DB 접속 함수
-def db_connecting(id, key):
-    global db, cursor
-    db = pymysql.connect(host='127.0.0.1',
-                         user=id, password=key, charset="utf8", port=5000)
-    cursor = db.cursor(pymysql.cursors.DictCursor)
-    cursor.execute('USE test;')
-    if (cursor.execute("show status like 'Threads_connected';") == 1):
-        print('test_db Connected')
-#####################################################
-
-
 
 ###################################################### 시간 계산 및 기준 시간 설정
 now = datetime.now()
