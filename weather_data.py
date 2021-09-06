@@ -8,13 +8,12 @@ from urllib.parse import urlencode, unquote, quote_plus
 # unquote - 반대로 사람이 읽을 수 있는 값으로 변환시킴
 from datetime import datetime
 import json
-import pymysql
-import weather_db
-import weather_local
+from lib import weather_db, weather_local
 # import pandas as pd
 
 
-
+# db접속
+db, cursor = weather_db.db_connecting('root', 'qwe123')
 count = 0
 
 ###################################################### 시간 계산 및 기준 시간 설정
@@ -44,7 +43,7 @@ today_date = str(now.year)+'0'+str(now.month)+str(today_day)
 #####################################################
 
 ##################################################### 엑셀에서 사용자 위치 추출
-user_x, user_y = weather_local.find_user_location()
+# user_x, user_y = weather_local.find_user_location()
 #####################################################
 
 
@@ -52,8 +51,7 @@ user_x, user_y = weather_local.find_user_location()
 name, code, x, y = weather_local.find_location()
 #####################################################
 
-for num in len(name):
-
+for num in code:
     ##################################################### 파라미터 설정
     CallBackURL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
     params = '?' + urlencode({
@@ -61,10 +59,12 @@ for num in len(name):
         quote_plus("numOfRows"): '1000',
         quote_plus('pageNo'): '1',
         quote_plus('dataType'): 'JSON',
-        quote_plus('base_date'): today_date,
-        quote_plus('base_time'): today_time,
-        quote_plus('nx'): location_x.pop(0),
-        quote_plus('ny'): location_y.pop(0)'
+        # quote_plus('base_date'): today_date,
+        # quote_plus('base_time'): today_time,
+        quote_plus('base_date'): '20210906',
+        quote_plus('base_time'): '1400',
+        quote_plus('nx'): x.pop(0),
+        quote_plus('ny'): y.pop(0)
     })
     #####################################################
 
@@ -120,10 +120,12 @@ for num in len(name):
             weather_data['하늘'] = weather_state
         # 컬럼개수를 만족하는 데이터는 테이블에 삽입
         if count == 3:
-            cursor.execute("INSERT INTO ", +code[num], +, "(date, time, tmp, rain, sky) VALUES ('"+
+            cursor.execute("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
                         weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
                         weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+"')")
             db.commit()
+            print(str(num))
+            print(weather_data)
             count = 0
 
 
@@ -132,7 +134,5 @@ print('Update Success')
 db.close()
 #####################################################
 
-# 사용자가 입력하는 값을 넣는게 맞나?
-# 먼저 그냥 db에 다 넣어놓고 호출하는게 맞나?
-# 호출을 할 때 트리거? 명령어?를 선정하는게 어려움
-# 현재 날씨는 db에 넣는것 까지 성공
+# 호출 시간 설정
+# 중복 데이터 제거

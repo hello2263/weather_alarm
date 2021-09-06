@@ -9,7 +9,7 @@ location_y = []
 location_name = []
 location_code = []
 
-Location = 'C:\python\weather_api'
+Location = 'C:\python\weather_alarm/source'
 File = 'weather_location.xlsx'
 
 
@@ -45,8 +45,13 @@ def find_location():
     data_pd = pd.read_excel('{}/{}'.format(Location, File),
                             header=None, index_col=None, names=None)
     for item in data_pd.iloc:
+        print(item)
         location_name.append(item[1])
-        location_code.append(item[2])
+        if item[2] < 10:
+            test = "0" + str(item[2])
+        else:
+            test = str(item[2])
+        location_code.append(test)
         location_x.append(item[3])
         location_y.append(item[4])
 
