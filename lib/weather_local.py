@@ -9,7 +9,7 @@ location_y = []
 location_name = []
 location_code = []
 
-Location = '/home/pi/weather_alarm/source'
+Location = './source'
 File = 'weather_location.xlsx'
 
 

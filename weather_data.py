@@ -19,7 +19,6 @@ count = 0
 ###################################################### 시간 계산 및 기준 시간 설정
 now = datetime.now()
 today_time = int(str(now.hour)+str(now.minute))
-today_day = now.day
 if today_time < 215:
     today_day -= 1
     today_time = '2330'
@@ -39,7 +38,18 @@ elif today_time < 2315:
     today_time = '2030'
 else:
     today_time = '2330'
-today_date = str(now.year)+'0'+str(now.month)+str(today_day)
+
+if now.month < 10:
+    today_month = '0'+str(now.month)
+else:
+    today_month = str(now.month)
+
+if now.day < 10:
+    today_day = '0'+str(now.day)
+else:
+    today_day = str(now.day)
+
+today_date = str(now.year)+today_month+str(today_day)
 #####################################################
 
 ##################################################### 엑셀에서 사용자 위치 추출
@@ -51,6 +61,8 @@ today_date = str(now.year)+'0'+str(now.month)+str(today_day)
 name, code, x, y = weather_local.find_location()
 #####################################################
 
+
+
 for num in code:
     print("data sending")
     ##################################################### 파라미터 설정
@@ -60,14 +72,15 @@ for num in code:
         quote_plus("numOfRows"): '1000',
         quote_plus('pageNo'): '1',
         quote_plus('dataType'): 'JSON',
-        # quote_plus('base_date'): today_date,
-        # quote_plus('base_time'): today_time,
-        quote_plus('base_date'): '20210909',
-        quote_plus('base_time'): '0800',
+        quote_plus('base_date'): today_date,
+        quote_plus('base_time'): today_time,
+        # quote_plus('base_date'): '20210909',
+        # quote_plus('base_time'): '0800',
         quote_plus('nx'): x.pop(0),
         quote_plus('ny'): y.pop(0)
     })
     #####################################################
+
 
 
     # URL 데이터 파싱
@@ -121,9 +134,21 @@ for num in code:
             weather_data['하늘'] = weather_state
         # 컬럼개수를 만족하는 데이터는 테이블에 삽입
         if count == 3:
+            # cursor.execute("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
+            #             weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
+            #             weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+"');")
+            
+            print("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
+                        weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
+                        weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+
+                        "') ON DUPLICATE KEY UPDATE tmp='" + weather_data['기온'] + "'," + "rain='" + 
+                        weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
+
             cursor.execute("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
                         weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
-                        weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+"')")
+                        weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+
+                        "') ON DUPLICATE KEY UPDATE tmp='" +weather_data['기온'] + "'," + "rain='" + 
+                        weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
             db.commit()
             count = 0
 
