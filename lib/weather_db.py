@@ -17,7 +17,7 @@ def db_connecting(id, key):
     cursor = db.cursor(pymysql.cursors.DictCursor)
     cursor.execute('USE weather;')
     if (cursor.execute("show status like 'Threads_connected';") == 1):
-        print('test_db Connected')
+        print('db Connected')
 
     return db, cursor
 #####################################################
