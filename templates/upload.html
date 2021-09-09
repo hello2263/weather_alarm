@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<title>파일 업로드</title>
+	</head>
+	<body>
+		<a href="/">홈</a><br>
+	</body>
+	<body>
+		<!-- 이 밑에 enctype 부분을 작성안하면 경로만 들어간다는데 잘 모르겠다 -->
+		<form action = "/fileUpload" method = "POST" enctype="multipart/form-data"> 
+			<input type = "file" name = "file" />
+			<input type="submit"/>
+		</form>
+	</body>
+</html>
+

@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<title>파일 삭제</title>
+	</head>
+	<body>
+		<a href="/">홈</a><br>
+	</body>
+	<body>
+		<form action = "/fileDelete" method = "POST" enctype="multipart/form-data"> 
+			<input type = "text" name = "file" />
+			<input type="submit"/>
+			<ul>
+	    		{% for n in files %}
+	    		<li>{{n}}</li>
+	    		{% endfor %}
+	    	</ul>
+	</body>
+</html>
+<!-- form태그를 안 닫아도 정상적으로 작동하는데 괜찮은건지 알아봐야함, form태그가 좀 중요한듯 --->

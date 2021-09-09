@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<title>파일 다운로드</title>
+	</head>
+	<body>
+		<a href="/">홈</a><br>
+	</body>
+	<body>
+		<form action = "/fileDownload" method = "POST" enctype = "multipart/form-data">
+        <input type = "text" name = "file" />
+    	<input type = "submit"/><br><br>
+    	<ul>
+    		{% for n in files %}
+    		<li>{{n}}</li>
+    		{% endfor %}
+    	</ul>
+	</body>
+</html>
+ 
