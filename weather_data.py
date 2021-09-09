@@ -22,23 +22,23 @@ today_time = int(str(now.hour)+str(now.minute))
 today_day = now.day
 if today_time < 215:
     today_day -= 1
-    today_time = '2315'
+    today_time = '2330'
 elif today_time < 515:
-    today_time = '0215'
+    today_time = '0230'
 elif today_time < 815:
-    today_time = '0515'
+    today_time = '0530'
 elif today_time < 1115:
-    today_time = '0815'
+    today_time = '0830'
 elif today_time < 1415:
-    today_time = '1115'
+    today_time = '1130'
 elif today_time < 1715:
-    today_time = '1415'
+    today_time = '1430'
 elif today_time < 2015:
-    today_time = '1715'
+    today_time = '1730'
 elif today_time < 2315:
-    today_time = '2015'
+    today_time = '2030'
 else:
-    today_time = '2315'
+    today_time = '2330'
 today_date = str(now.year)+'0'+str(now.month)+str(today_day)
 #####################################################
 
@@ -52,6 +52,7 @@ name, code, x, y = weather_local.find_location()
 #####################################################
 
 for num in code:
+    print("data sending")
     ##################################################### 파라미터 설정
     CallBackURL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
     params = '?' + urlencode({
@@ -61,8 +62,8 @@ for num in code:
         quote_plus('dataType'): 'JSON',
         # quote_plus('base_date'): today_date,
         # quote_plus('base_time'): today_time,
-        quote_plus('base_date'): '20210906',
-        quote_plus('base_time'): '1400',
+        quote_plus('base_date'): '20210909',
+        quote_plus('base_time'): '0800',
         quote_plus('nx'): x.pop(0),
         quote_plus('ny'): y.pop(0)
     })
@@ -124,8 +125,6 @@ for num in code:
                         weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
                         weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+"')")
             db.commit()
-            print(str(num))
-            print(weather_data)
             count = 0
 
 
