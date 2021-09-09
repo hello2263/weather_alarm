@@ -138,12 +138,6 @@ for num in code:
             #             weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
             #             weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+"');")
             
-            print("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
-                        weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
-                        weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+
-                        "') ON DUPLICATE KEY UPDATE tmp='" + weather_data['기온'] + "'," + "rain='" + 
-                        weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
-
             cursor.execute("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
                         weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
                         weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+
