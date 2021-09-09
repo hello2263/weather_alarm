@@ -58,6 +58,12 @@ def render_file_delete():
     files_list = os.listdir("./uploads")
     return render_template('delete.html', files=files_list)
 
+# 날씨
+@app.route('/weather')
+def render_weather():
+    return render_template('weather.html')
+
+
 
 
 """                    구동 부분                      """

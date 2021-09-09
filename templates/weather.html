@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<title>서울특별시 날씨</title>
+	</head>
+	<body>
+		<a href="/">홈</a><br>
+	</body>
+	<body>
+		<form action = "/fileDelete" method = "POST" enctype="multipart/form-data"> 
+			<input type = "text" name = "file" />
+			<input type="submit"/>
+			<ul>
+	    		{% for n in files %}
+	    		<li>{{n}}</li>
+	    		{% endfor %}
+	    	</ul>
+	</body>
+</html>
