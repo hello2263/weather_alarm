@@ -10,7 +10,8 @@ location_name = []
 location_code = []
 
 # Location = './source'
-Location = '/home/pi/Desktop/circulus/source'
+# Location = '/home/pi/Desktop/circulus/source'
+Location = '/home/pi/weather_alarm/source'
 File = 'weather_location.xlsx'
 
 
