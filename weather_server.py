@@ -109,7 +109,7 @@ def delete_file():
 # 날씨
 @app.route('/weather_alarm', methods = ['GET'])
 def weather_alarm():
-    if request.method == 'POST':
+    if request.method == 'GET':
         db, cursor = weather_db.db_connecting('root', 'qwe123')
         if now.month < 10:
             today_month = '0'+str(now.month)
