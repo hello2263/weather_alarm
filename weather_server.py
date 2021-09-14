@@ -3,6 +3,9 @@
 from flask import Flask, jsonify, render_template, request, send_file
 from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
+from datetime import datetime
+from lib import weather_db
+
 import werkzeug, os
 
 # jsonify?
@@ -99,14 +102,35 @@ def download_file():
 @app.route('/fileDelete', methods = ['POST'])
 def delete_file():
     if request.method == 'POST':
-        # sw = 0
-        # files_list = os.listdir("./uploads")
-        # for x in files_list:
-        #     if (x == request.form['file']):
-        #         sw = 1
         path = "./uploads/"
         os.remove(path+"{}".format(request.form['file']))
         return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
+
+# 날씨
+@app.route('/weather_alarm', methods = ['GET'])
+def weather_alarm():
+    if request.method == 'POST':
+        db, cursor = weather_db.db_connecting('root', 'qwe123')
+        if now.month < 10:
+            today_month = '0'+str(now.month)
+        else:
+            today_month = str(now.month)
+
+        if now.day < 10:
+            today_day = '0'+str(now.day)
+        else:
+            today_day = str(now.day)
+        date = str(now.year)+today_month+str(today_day)
+
+        if now.hour < 10:
+            hour = '0'+str(now.hour)
+        else:
+            hour = str(now.hour)
+        time = hour+'00'
+
+        return """time : <br><br>""".format(time)
+
+
 
 
 # @app.route('/user/<userName>') # URL뒤에 <>을 이용해 가변 경로를 적는다, 이런식도 가능함

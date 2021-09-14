@@ -10,6 +10,7 @@ from datetime import datetime
 import json
 from lib import weather_db, weather_local
 # import pandas as pd
+global today_date
 
 
 # db접속
