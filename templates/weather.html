@@ -5,13 +5,9 @@
 	<body>
 		<a href="/">홈</a><br>
 	</body>
+
 	<body>
-		<img src="map1.png" alt="errpr">
+		<img src="{{'static', url_for(filename='/map.jpg') }}"/>
 	</body>
-	<body>
-		<br>
-		<form action = "/weather_alarm" method = "GET" enctype="multipart/form-data"> 
-			<input type = "text" name = "file" />
-			<input type="submit"/>
-	</body>
+
 </html>

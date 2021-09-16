@@ -1,7 +1,7 @@
 #####################################################
 #####################################################
 # DB에 접속해서 데이터를 추출하고 시각화까지 하는 모듈
-
+from datetime import datetime
 import pymysql
 
 ##################################################### DB 접속 함수
@@ -21,6 +21,32 @@ def db_connecting(id, key):
 
     return db, cursor
 #####################################################
+
+
+def nowtime():
+    now = datetime.now()
+
+    if now.month < 10:
+        today_month = '0'+str(now.month)
+    else:
+        today_month = str(now.month)
+
+    if now.day < 10:
+        today_day = '0'+str(now.day)
+    else:
+        today_day = str(now.day)
+
+    if now.hour < 10:
+        today_hour = '0'+str(now.hour)
+    else:
+        today_hour = str(now.hour)
+
+    today_date = str(now.year)+today_month+today_day
+    today_time = today_hour+'00'
+
+    return str(today_date + '-' + today_time)
+
+
 
 
 

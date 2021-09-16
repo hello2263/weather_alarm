@@ -4,9 +4,9 @@ from flask import Flask, jsonify, render_template, request, send_file
 from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
-from lib import weather_db
-
+from lib import weather_db, weather_local
 import werkzeug, os
+
 
 # jsonify?
 # json data를 내보내도록 제공하는 flask의 함수
@@ -16,6 +16,9 @@ import werkzeug, os
 
 app = Flask(__name__) # 단일 모듈을 사용하면 __name__을 사용해야함 (?), flask class 인스턴스 생성
 api = Api(app)
+
+# db접속
+db, cursor = weather_db.db_connecting('root', 'qwe123')
 
 # @app.route('/') -> http://localhost:5000/을 가리키며
 # @app.route('/hello') -> http://localhost:5000/hello를 가리킴
@@ -62,9 +65,9 @@ def render_file_delete():
     return render_template('delete.html', files=files_list)
 
 # 날씨
-@app.route('/weather')
-def render_weather():
-    return render_template('weather.html')
+# @app.route('/weather')
+# def render_weather():
+#     return render_template('weather.html')
 
 
 
@@ -107,31 +110,56 @@ def delete_file():
         return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
 
 # 날씨
-@app.route('/weather_alarm', methods = ['GET'])
+# @app.route('/weather_alarm', methods = ['GET'])
+# def weather_alarm():
+#     if request.method == 'GET':
+#         db, cursor = weather_db.db_connecting('root', 'qwe123')
+#         if now.month < 10:
+#             today_month = '0'+str(now.month)
+#         else:
+#             today_month = str(now.month)
+
+#         if now.day < 10:
+#             today_day = '0'+str(now.day)
+#         else:
+#             today_day = str(now.day)
+#         date = str(now.year)+today_month+str(today_day)
+
+#         if now.hour < 10:
+#             hour = '0'+str(now.hour)
+#         else:
+#             hour = str(now.hour)
+#         time = hour+'00'
+#         return """time : <br><br>""".format(time)
+
+@app.route('/weather')
 def weather_alarm():
-    if request.method == 'GET':
-        db, cursor = weather_db.db_connecting('root', 'qwe123')
-        if now.month < 10:
-            today_month = '0'+str(now.month)
-        else:
-            today_month = str(now.month)
-
-        if now.day < 10:
-            today_day = '0'+str(now.day)
-        else:
-            today_day = str(now.day)
-        date = str(now.year)+today_month+str(today_day)
-
-        if now.hour < 10:
-            hour = '0'+str(now.hour)
-        else:
-            hour = str(now.hour)
-        time = hour+'00'
-
-        return """time : <br><br>""".format(time)
+    global unique_key
+    unique_key = weather_db.nowtime()
+    select_weather()
+    return render_template('weather.html')
 
 
 
+def select_weather():
+    count = 0
+    name, code, x, y = weather_local.find_location()
+    for num in code:
+        a_code =  {'name' : name[count]}
+        count += 1
+        sql = 'SELECT tmp FROM A'+str(num)+' WHERE time = %s'
+        # print(sql)
+        # print(cursor.execute(sql, (unique_key)))
+
+        print(cursor.execute('SELECT tmp FROM A00  WHERE time = "20210916-1400"'))
+
+        print([i for i in cursor])
+
+        # a_code['tmp'] = cursor.execute('SELECT tmp FROM A'+str(num)+".tmp WHERE time = '"+unique_key+"'")
+        # a_code['rain'] = cursor.execute('SELECT rain FROM A'+str(num)+" WHERE time = '"+unique_key+"'")
+        # a_code['sky'] = cursor.execute('SELECT sky FROM A'+str(num)+" WHERE time = '"+unique_key+"'")
+        # print(a_code['tmp'])
+        # print(a_code.values())
 
 # @app.route('/user/<userName>') # URL뒤에 <>을 이용해 가변 경로를 적는다, 이런식도 가능함
 # def hello_user(userName):

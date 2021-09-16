@@ -115,7 +115,7 @@ for num in code:
     for item in item_data:
         # weather_data['날짜'] = item['fcstDate']
         # weather_data['시간'] = item['fcstTime']
-        weather_data['타임'] = item['fcstDate'] +'_' +item['fcstTime']
+        weather_data['타임'] = item['fcstDate'] +'-' +item['fcstTime']
         if item['category'] =='TMP': # 기온체크
             weather_data['기온'] = item['fcstValue']
             count += 1
@@ -154,6 +154,7 @@ for num in code:
 
             db.commit()
             count = 0
+    print("data finished")
 
 
 
