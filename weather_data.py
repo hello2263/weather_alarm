@@ -73,10 +73,10 @@ for num in code:
         quote_plus("numOfRows"): '1000',
         quote_plus('pageNo'): '1',
         quote_plus('dataType'): 'JSON',
-        quote_plus('base_date'): today_date,
-        quote_plus('base_time'): today_time,
-        # quote_plus('base_date'): '20210909',
-        # quote_plus('base_time'): '0800',
+        # quote_plus('base_date'): today_date,
+        # quote_plus('base_time'): today_time,
+        quote_plus('base_date'): '20210916',
+        quote_plus('base_time'): '0800',
         quote_plus('nx'): x.pop(0),
         quote_plus('ny'): y.pop(0)
     })
@@ -113,8 +113,9 @@ for num in code:
     weather_data = dict() # 조회한 오늘 날씨 정보
 
     for item in item_data:
-        weather_data['날짜'] = item['fcstDate']
-        weather_data['시간'] = item['fcstTime']
+        # weather_data['날짜'] = item['fcstDate']
+        # weather_data['시간'] = item['fcstTime']
+        weather_data['타임'] = item['fcstDate'] +'_' +item['fcstTime']
         if item['category'] =='TMP': # 기온체크
             weather_data['기온'] = item['fcstValue']
             count += 1
@@ -139,11 +140,18 @@ for num in code:
             #             weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
             #             weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+"');")
             
-            cursor.execute("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
-                        weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
-                        weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+
-                        "') ON DUPLICATE KEY UPDATE tmp='" +weather_data['기온'] + "'," + "rain='" + 
-                        weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
+            # cursor.execute("INSERT INTO A" + str(num) + "(date, time, tmp, rain, sky) VALUES ('"+
+            #             weather_data['날짜']+"', '"+weather_data['시간']+"', '" +
+            #             weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+weather_data['하늘']+
+            #             "') ON DUPLICATE KEY UPDATE tmp='" +weather_data['기온'] + "'," + "rain='" + 
+            #             weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
+
+            cursor.execute("INSERT INTO A" + str(num) + "(time, tmp, rain, sky) VALUES ('"+
+                        weather_data['타임']+"', '" + weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+
+                        weather_data['하늘']+"') ON DUPLICATE KEY UPDATE tmp='" +weather_data['기온'] + "'," + 
+                        "rain='" + weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
+            
+
             db.commit()
             count = 0
 
