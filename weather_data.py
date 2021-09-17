@@ -48,7 +48,9 @@ def set_date():
         today_day = str(today_day)
     
     today_date = str(now.year)+today_month+today_day # 20210905
+
     return today_date + '-' + today_time # 20210905-1400
+
         
 def get_data():
     CallBackURL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'

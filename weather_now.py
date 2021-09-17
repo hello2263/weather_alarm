@@ -10,7 +10,7 @@ from datetime import datetime
 import json
 import pymysql
 import pandas as pd
-from lib import weather_local, weather_db
+from lib import weather_local, weather_db, weatehr_data
 
 # db접속
 db, cursor = weather_db.db_connecting('root', 'qwe123')

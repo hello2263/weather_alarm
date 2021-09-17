@@ -5,6 +5,7 @@ from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from lib import weather_db, weather_local
+import weather_data
 import werkzeug, os
 
 app = Flask(__name__) 
@@ -96,36 +97,39 @@ def delete_file():
 # 날씨
 @app.route('/weather')
 def weather_alarm():
-    global unique_key
-    unique_key = weather_db.nowtime()
-    select_weather()
+    now_weather()
     return render_template('weather.html')
 
 
 
 
-def select_weather():
+def now_weather():
     count = 0
-    name, code, x, y = weather_local.find_location()
-    for num in code:
-        a_code =  {'name' : name[count]}
+    weather = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
+    local, x, y = weather_local.find_location()
+    unique_key = weather_db.nowtime()
+    sql = 'SELECT * FROM seoul WHERE date = %s'
+    cursor.execute(sql, (unique_key))
+    # print([i for i in cursor])
+    
+    for i in cursor:
+        weather[count] = i
         count += 1
-        sql = 'SELECT tmp FROM A'+str(num)+' WHERE time = %s'
-        # print(sql)
-        # print(cursor.execute(sql, (unique_key)))
-
-        print(cursor.execute('SELECT tmp FROM A00  WHERE time = "20210916-1400"'))
-
-        print([i for i in cursor])
-
-        # a_code['tmp'] = cursor.execute('SELECT tmp FROM A'+str(num)+".tmp WHERE time = '"+unique_key+"'")
-        # a_code['rain'] = cursor.execute('SELECT rain FROM A'+str(num)+" WHERE time = '"+unique_key+"'")
-        # a_code['sky'] = cursor.execute('SELECT sky FROM A'+str(num)+" WHERE time = '"+unique_key+"'")
-        # print(a_code['tmp'])
-        # print(a_code.values())
+    # weather[숫자]인 이유는 한글로 표현했을경우 for문을 돌려야함
+    print(weather[0])
+    print(weather[10])
+    print(weather[24])
+    
+    
+        
+    
+    # for name in local:
+    #     sql = 'SELECT * FROM seoul WHERE date = %s'
+    #     # print(sql, (unique_key))
+    #     print(cursor.execute(sql, (unique_key)))
+    #     print([i for i in cursor])
 
 
 if __name__ == '__main__': 
-    now = datetime()
     app.run(debug = True, port = 108)
     # app.run(host = '0.0.0.0', debug = True)
