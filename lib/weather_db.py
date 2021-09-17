@@ -14,7 +14,6 @@ def db_connecting(id, key):
     cursor.execute('USE weather;')
     if (cursor.execute("show status like 'Threads_connected';") == 1):
         print('db Connected')
-
     return db, cursor
 
 def nowtime():
