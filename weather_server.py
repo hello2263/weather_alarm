@@ -7,21 +7,11 @@ from datetime import datetime
 from lib import weather_db, weather_local
 import werkzeug, os
 
-
-# jsonify?
-# json data를 내보내도록 제공하는 flask의 함수
-# jsonify가 편하지만 지원되지 않는 형식(한글 등)을 주고 받으려면 별도의 인코더가 필요함.
-# Flask처럼 웹서버로 쓰이는 환경에서 이런식으로 데이터를 내려보내면
-# 프론트엔드에서는 다시 이 코드포인트들을 문자열로 변환해야 한다는 문제점이 생긴다.
-
-app = Flask(__name__) # 단일 모듈을 사용하면 __name__을 사용해야함 (?), flask class 인스턴스 생성
+app = Flask(__name__) 
 api = Api(app)
 
 # db접속
 db, cursor = weather_db.db_connecting('root', 'qwe123')
-
-# @app.route('/') -> http://localhost:5000/을 가리키며
-# @app.route('/hello') -> http://localhost:5000/hello를 가리킴
 
 """                    템플릿 부분                    """
 # 홈
@@ -64,17 +54,11 @@ def render_file_delete():
     files_list = os.listdir("./uploads")
     return render_template('delete.html', files=files_list)
 
-# 날씨
-# @app.route('/weather')
-# def render_weather():
-#     return render_template('weather.html')
-
-
 
 
 """                    구동 부분                      """
 # 메세지 받기
-@app.route('/message_receive', methods = ['POST']) # method가 이 페이지에서 하는 동작을 의미하는 것 같음
+@app.route('/message_receive', methods = ['POST']) 
 def message_receive():
     value = request.form['message'] # 일반적으로 form태그를 이용하여 POST 방식으로 전달받을 때 주로 사용
     return render_template('message_receive.html', data = value)
@@ -110,34 +94,13 @@ def delete_file():
         return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
 
 # 날씨
-# @app.route('/weather_alarm', methods = ['GET'])
-# def weather_alarm():
-#     if request.method == 'GET':
-#         db, cursor = weather_db.db_connecting('root', 'qwe123')
-#         if now.month < 10:
-#             today_month = '0'+str(now.month)
-#         else:
-#             today_month = str(now.month)
-
-#         if now.day < 10:
-#             today_day = '0'+str(now.day)
-#         else:
-#             today_day = str(now.day)
-#         date = str(now.year)+today_month+str(today_day)
-
-#         if now.hour < 10:
-#             hour = '0'+str(now.hour)
-#         else:
-#             hour = str(now.hour)
-#         time = hour+'00'
-#         return """time : <br><br>""".format(time)
-
 @app.route('/weather')
 def weather_alarm():
     global unique_key
     unique_key = weather_db.nowtime()
     select_weather()
     return render_template('weather.html')
+
 
 
 
@@ -161,13 +124,8 @@ def select_weather():
         # print(a_code['tmp'])
         # print(a_code.values())
 
-# @app.route('/user/<userName>') # URL뒤에 <>을 이용해 가변 경로를 적는다, 이런식도 가능함
-# def hello_user(userName):
-#     return 'Hello, %s'%(userName)
-
-# 여러 줄을 텍스트로 입력하고 싶을때
-# https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sonicheroes1&logNo=220676215649
-
 
 if __name__ == '__main__': 
-    app.run(host = '0.0.0.0', debug = True)
+    now = datetime()
+    app.run(debug = True, port = 108)
+    # app.run(host = '0.0.0.0', debug = True)

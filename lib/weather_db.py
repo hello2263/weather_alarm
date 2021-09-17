@@ -1,10 +1,6 @@
-#####################################################
-#####################################################
-# DB에 접속해서 데이터를 추출하고 시각화까지 하는 모듈
 from datetime import datetime
 import pymysql
 
-##################################################### DB 접속 함수
 # DB 접근 설정
 db_user = "root"
 db_password = "qwe123"
@@ -12,7 +8,7 @@ db_password = "qwe123"
 
 def db_connecting(id, key):
     global db, cursor
-    db = pymysql.connect(host='192.168.1.164',
+    db = pymysql.connect(host='192.168.0.14',
                          user=id, password=key, charset="utf8", port=3306)
     cursor = db.cursor(pymysql.cursors.DictCursor)
     cursor.execute('USE weather;')
@@ -20,8 +16,6 @@ def db_connecting(id, key):
         print('db Connected')
 
     return db, cursor
-#####################################################
-
 
 def nowtime():
     now = datetime.now()
@@ -30,7 +24,7 @@ def nowtime():
         today_month = '0'+str(now.month)
     else:
         today_month = str(now.month)
-
+        
     if now.day < 10:
         today_day = '0'+str(now.day)
     else:
@@ -45,17 +39,4 @@ def nowtime():
     today_time = today_hour+'00'
 
     return str(today_date + '-' + today_time)
-
-
-
-
-
-#####################################################
-
-# 1:호출한 시간 평균, 2:호출된 온도 평균, 3:호출된 습도 평균
-
-#####################################################
-
-# db.connecting(db_user, db_password)
-# db.close()
 

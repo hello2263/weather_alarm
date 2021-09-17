@@ -18,30 +18,29 @@ db, cursor = weather_db.db_connecting('root', 'qwe123')
 # user의 지역 x, y좌표 따기
 x, y = weather_local.find_user_location()
 
+def set_nowdate():
+    now = datetime.now()
 
-##################################################### 시간 설정
-now = datetime.now()
+    if(now.minute<45):
+        today_hour = now.hour - 1
+    else:
+        today_hour = now.hour
 
-if(now.minute<45):
-    today_hour = now.hour - 1
-else:
-    today_hour = now.hour
-
-today_minute = '00'
+    today_minute = '00'
 
 
-if now.month < 10:
-    today_month = '0'+str(now.month)
-else:
-    today_month = str(now.month)
+    if now.month < 10:
+        today_month = '0'+str(now.month)
+    else:
+        today_month = str(now.month)
 
-if now.day < 10:
-    today_day = '0'+str(now.day)
-else:
-    today_day = str(now.day)
+    if now.day < 10:
+        today_day = '0'+str(now.day)
+    else:
+        today_day = str(now.day)
 
-today_date = str(now.year)+today_month+today_day
-#####################################################
+    today_date = str(now.year)+today_month+today_day
+    return today_date
 
 
 ##################################################### 파라미터 설정
