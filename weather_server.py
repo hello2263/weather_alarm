@@ -97,8 +97,8 @@ def delete_file():
 # 날씨
 @app.route('/weather')
 def weather_alarm():
-    now_weather()
-    return render_template('weather.html')
+    weather = now_weather()
+    return render_template('weather.html', data = weather)
 
 
 
@@ -116,11 +116,12 @@ def now_weather():
         weather[count] = i
         count += 1
     # weather[숫자]인 이유는 한글로 표현했을경우 for문을 돌려야함
-    print(weather[0])
+    
+    print(weather[0].values())
     print(weather[10])
     print(weather[24])
     
-    
+    return weather
         
     
     # for name in local:
