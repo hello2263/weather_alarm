@@ -117,9 +117,9 @@ def now_weather():
         count += 1
     # weather[숫자]인 이유는 한글로 표현했을경우 for문을 돌려야함
     
-    print(weather[0].values())
-    print(weather[10])
-    print(weather[24])
+    # print(weather[0].values())
+    # print(weather[10])
+    # print(weather[24])
     
     return weather
         
