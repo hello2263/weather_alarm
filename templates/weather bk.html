@@ -8,12 +8,7 @@
 
 	<body>
 		<div style='position: relative'>
-			<img height="800px" width="1200px", alt="" usemap="#imgmap001" class="event-img"
-				src="{{ url_for('static', filename='./map.jpg') }}"/><br>
-			<map id="imgmap001" name="imgmap001">
-				<area shape="rect" alt="" title="" coords="500,2100,1440,2500"
-					href="javascript:onEvent()" target="" />
-			</map>
+			<img height="800px" width="1200px" src="{{ url_for('static', filename='./map.jpg') }}"/><br>
 			<!-- 강남구 -->
 			<div style="left: 767px; bottom:205px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
 				{{data[0]['tmp']}}도
