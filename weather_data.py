@@ -108,7 +108,7 @@ def send_data(local):
                         "rain='" + weather_data['강수확률']+"'," + "sky='" + weather_data['하늘']+"';")
             db.commit()
             count = 0
-    print("data sended")
+    print(local + "data sended")
     
 
 if __name__ == "__main__":
