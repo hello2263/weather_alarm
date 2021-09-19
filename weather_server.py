@@ -7,6 +7,7 @@ from datetime import datetime
 from lib import weather_db, weather_local
 import weather_data
 import werkzeug, os
+global db, cursor 
 
 app = Flask(__name__) 
 api = Api(app)
@@ -97,9 +98,10 @@ def delete_file():
 # 날씨
 @app.route('/weather')
 def weather_alarm():
+    ctime, count = count_time()
     weather = now_weather()
-    return render_template('weather.html', data = weather)
-
+    today_time = weather_data.set_date()
+    return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
 
 
 
@@ -110,19 +112,30 @@ def now_weather():
     unique_key = weather_db.nowtime()
     sql = 'SELECT * FROM seoul WHERE date = %s'
     cursor.execute(sql, (unique_key))
-    # print([i for i in cursor])
     
     for i in cursor:
         weather[count] = i
         count += 1
     # weather[숫자]인 이유는 한글로 표현했을경우 for문을 돌려야함
     
-    # print(weather[0].values())
-    # print(weather[10])
-    # print(weather[24])
-    
     return weather
+
+def count_time():
+    flag = 2
+    count = 0
+    count_date = []
+    date = weather_data.set_date()
+    sql = 'SELECT date FROM seoul WHERE local = "강남구" AND date >= %s'
+    cursor.execute(sql, (date))
+    for i in cursor:
+        if flag == 2:
+            count_date.append(i)
+            count += 1
+            flag = 0
+        else:
+            flag += 1
         
+    return count_date, count
     
     # for name in local:
     #     sql = 'SELECT * FROM seoul WHERE date = %s'
@@ -132,5 +145,6 @@ def now_weather():
 
 
 if __name__ == '__main__': 
-    # app.run(debug = True, port = 108)
-    app.run(host = '0.0.0.0', debug = True)
+    app.run(debug = True, port = 108)
+    
+    # app.run(host = '0.0.0.0', debug = True)

@@ -109,7 +109,6 @@ def send_data(local):
             db.commit()
             count = 0
     print(local + "data sended")
-    
 
 if __name__ == "__main__":
     # db접속
