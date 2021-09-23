@@ -1,17 +1,47 @@
 <html>
 	<head>
-		<title>서울특별시 현재기온</title>
+		<title>서울특별시 기온</title>
+
+		<script type='text/javascript'>
+			function check(){
+				var sel = document.getElementById('Time')
+				// var val = sel.options[sel.selectedIndex].value;
+				var user_date = sel.options[sel.selectedIndex].text;
+				return user_date
+			}
+
+			function handleOnChange(e) {
+				// 선택된 데이터의 텍스트값 가져오기
+				const text = e.options[e.selectedIndex].text;
+				console.log(e.options);
+				// 선택한 텍스트 출력
+				document.getElementById('date').innerText
+					= text;
+				return console.log(e.options)
+			}
+
+		</script>
+		
 	</head>
 	<body>
 		<a href="/">홈</a><br>
+		기준시간: 
+		<span id='date'></span><br>
+		
 
-		<form>
-			<select name = "Time">
+		<form action = '' method='post'>
+			
+			<select name = "Time" id = 'Time' onchange='handleOnChange(this)'>
+				<option value = "" selected>-- 선택 --</option>
 				{% for n in range(0,(count-1)) %}
-				<option value = "" selected>{{time[n]['date']}}</option>
-				{% endfor %}
-			</select>
+				<option value = "" >{{time[n]['date']}}</option>
+				{% endfor %} &nbsp;
+
+			</select> 
+			
 		</form>
+
+		
 	</body>
 
 	<body>

@@ -1,9 +1,11 @@
 # https://flask-docs-kr.readthedocs.io/ko/latest/ -flask 공식 문서
 # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.save.html -werkzeug 공식문서
+from urllib.request import Request, urlopen
 from flask import Flask, jsonify, render_template, request, send_file
 from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from bs4 import BeautifulSoup
 from lib import weather_db, weather_local
 import weather_data
 import werkzeug, os
@@ -11,6 +13,11 @@ global db, cursor
 
 app = Flask(__name__) 
 api = Api(app)
+
+
+
+
+
 
 # db접속
 db, cursor = weather_db.db_connecting('root', 'qwe123')
@@ -96,12 +103,23 @@ def delete_file():
         return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
 
 # 날씨
-@app.route('/weather')
+@app.route('/weather', methods=['GET', 'POST'])
 def weather_alarm():
     ctime, count = count_time()
     weather = now_weather()
     today_time = weather_data.set_date()
+    # date_parsing()
+    
+    
     return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
+
+def date_parsing():
+    req = Request('http://127.0.0.1:108/weather')
+    res = urlopen(req)
+    html = res.read().decode('utf-8')
+    bs = BeautifulSoup(html, 'htmlp.parser')
+    tags = bs.findAll('span', {'class' : 'user_date'})
+    print(tags)
 
 
 
@@ -136,13 +154,6 @@ def count_time():
             flag += 1
         
     return count_date, count
-    
-    # for name in local:
-    #     sql = 'SELECT * FROM seoul WHERE date = %s'
-    #     # print(sql, (unique_key))
-    #     print(cursor.execute(sql, (unique_key)))
-    #     print([i for i in cursor])
-
 
 if __name__ == '__main__': 
     app.run(debug = True, port = 108)
