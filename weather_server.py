@@ -14,11 +14,6 @@ global db, cursor
 app = Flask(__name__) 
 api = Api(app)
 
-
-
-
-
-
 # db접속
 db, cursor = weather_db.db_connecting('root', 'qwe123')
 
@@ -102,12 +97,11 @@ def delete_file():
         os.remove(path+"{}".format(request.form['file']))
         return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
 
-# 유저의 날씨선택
+# 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
 def weather_user_date(user_date):
     ctime, count = count_time()
     weather = now_weather(user_date)
-    # today_time = weather_data.set_date()
     return render_template('weather.html', data = weather, date = user_date, time = ctime, count = count)
 
 # 날씨
@@ -117,17 +111,7 @@ def weather_alarm():
     time = weather_db.nowtime()
     weather = now_weather(time)
     today_time = weather_data.set_date()
-    # date_parsing()
     return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
-
-def date_parsing():
-    req = Request('http://127.0.0.1:108/weather')
-    res = urlopen(req)
-    html = res.read().decode('utf-8')
-    bs = BeautifulSoup(html, 'htmlp.parser')
-    tags = bs.findAll('span', {'class' : 'user_date'})
-    print(tags)
-
 
 
 def now_weather(time):
@@ -137,12 +121,10 @@ def now_weather(time):
     unique_key = time
     sql = 'SELECT * FROM seoul WHERE date = %s'
     cursor.execute(sql, (unique_key))
-    
     for i in cursor:
         weather[count] = i
         count += 1
     # weather[숫자]인 이유는 한글로 표현했을경우 for문을 돌려야함
-    
     return weather
 
 def count_time():
@@ -159,10 +141,8 @@ def count_time():
             flag = 0
         else:
             flag += 1
-        
     return count_date, count
 
 if __name__ == '__main__': 
     app.run(debug = True, port = 108)
-    
     # app.run(host = '0.0.0.0', debug = True)

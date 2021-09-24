@@ -1,49 +1,27 @@
 <html>
 	<head>
 		<title>서울특별시 기온</title>
-
 		<script type='text/javascript'>
-			function check(){
-				var sel = document.getElementById('Time')
-				// var val = sel.options[sel.selectedIndex].value;
-				var user_date = '/' + sel.options[sel.selectedIndex].text;
-				document.getElementById('user_date').innerHTML=user_date
-			}
 			function out(){
 				var sel = document.getElementById('Time')
 				var user_date = '/' + sel.options[sel.selectedIndex].text;
 				return user_date
 			}
-			function handleOnChange(e) {
-				// 선택된 데이터의 텍스트값 가져오기
-				const text = e.options[e.selectedIndex].text;
-				console.log(e.options);
-				// 선택한 텍스트 출력
-				document.getElementById('date').innerText
-					= text;
-				return console.log(e.options)
-			}
-
 		</script>
-		
 	</head>
+
 	<body>
-		
-		<a href="/">홈</a><br>
-		기준시간: {{date}}<br>
-		<a href="" onclick=" location.href = '/weather'+ out(this.value); return false;"><button>확인</button></a>
+		<a href="/">홈</a><br><br>
+		기준시간: {{date}}<br><br>
+		시간선택 (3시간 간격)<br>
 		<form action = '' method='post'>
-			
-			<select name = "Time" id = 'Time' onchange='check(this.value)'>
+			<select name = "Time" id = 'Time' >
 				<option value = "" selected>-- 선택 --</option>
 				{% for n in range(0,(count-1)) %}
 				<option value = "" >{{time[n]['date']}}</option>
-				{% endfor %} &nbsp;
-
-			</select> 
-			
+				{% endfor %} 
+			</select> <a href="" onclick=" location.href = '/weather'+ out(this.value); return false;"><button>확인</button></a>
 		</form>
-
 		
 	</body>
 
@@ -150,13 +128,6 @@
 			<div style="left: 885px; bottom:463px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
 				{{data[24]['tmp']}}도
 			</div>			
-		</div>
-			
-	</body>
-	<body>
-		<!-- {% for n in range(0,24) %}
-		{{data[n]['tmp']}}<br>
-		데이터 : {{data[n].values()}}<br>
-		{% endfor %} -->
+		</div>			
 	</body>
 </html>
