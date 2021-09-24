@@ -6,10 +6,14 @@
 			function check(){
 				var sel = document.getElementById('Time')
 				// var val = sel.options[sel.selectedIndex].value;
-				var user_date = sel.options[sel.selectedIndex].text;
+				var user_date = '/' + sel.options[sel.selectedIndex].text;
+				document.getElementById('user_date').innerHTML=user_date
+			}
+			function out(){
+				var sel = document.getElementById('Time')
+				var user_date = '/' + sel.options[sel.selectedIndex].text;
 				return user_date
 			}
-
 			function handleOnChange(e) {
 				// 선택된 데이터의 텍스트값 가져오기
 				const text = e.options[e.selectedIndex].text;
@@ -24,14 +28,13 @@
 		
 	</head>
 	<body>
-		<a href="/">홈</a><br>
-		기준시간: 
-		<span id='date'></span><br>
 		
-
+		<a href="/">홈</a><br>
+		기준시간: {{date}}<br>
+		<a href="" onclick=" location.href = '/weather'+ out(this.value); return false;"><button>확인</button></a>
 		<form action = '' method='post'>
 			
-			<select name = "Time" id = 'Time' onchange='handleOnChange(this)'>
+			<select name = "Time" id = 'Time' onchange='check(this.value)'>
 				<option value = "" selected>-- 선택 --</option>
 				{% for n in range(0,(count-1)) %}
 				<option value = "" >{{time[n]['date']}}</option>

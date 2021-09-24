@@ -102,15 +102,22 @@ def delete_file():
         os.remove(path+"{}".format(request.form['file']))
         return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
 
+# 유저의 날씨선택
+@app.route('/weather/<user_date>', methods=['GET', 'POST'])
+def weather_user_date(user_date):
+    ctime, count = count_time()
+    weather = now_weather(user_date)
+    # today_time = weather_data.set_date()
+    return render_template('weather.html', data = weather, date = user_date, time = ctime, count = count)
+
 # 날씨
 @app.route('/weather', methods=['GET', 'POST'])
 def weather_alarm():
     ctime, count = count_time()
-    weather = now_weather()
+    time = weather_db.nowtime()
+    weather = now_weather(time)
     today_time = weather_data.set_date()
     # date_parsing()
-    
-    
     return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
 
 def date_parsing():
@@ -123,11 +130,11 @@ def date_parsing():
 
 
 
-def now_weather():
+def now_weather(time):
     count = 0
     weather = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
     local, x, y = weather_local.find_location()
-    unique_key = weather_db.nowtime()
+    unique_key = time
     sql = 'SELECT * FROM seoul WHERE date = %s'
     cursor.execute(sql, (unique_key))
     

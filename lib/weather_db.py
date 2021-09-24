@@ -8,8 +8,8 @@ db_password = "qwe123"
 
 def db_connecting(id, key):
     global db, cursor
-    db = pymysql.connect(host='192.168.0.14',
-                         user=id, password=key, charset="utf8", port=3306)
+    db = pymysql.connect(host='49.142.68.172',
+                         user=id, password=key, charset="utf8", port=831)
     cursor = db.cursor(pymysql.cursors.DictCursor)
     cursor.execute('USE weather;')
     if (cursor.execute("show status like 'Threads_connected';") == 1):
