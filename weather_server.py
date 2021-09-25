@@ -45,12 +45,12 @@ def render_file_download():
     return render_template('download.html', files=files_list) #files라는 변수에 files_list를 담음
 
 # 목록
-@app.route('/list')
-def render_file_list(): # 따로 list.html을 만들지 않고 list를 표시하게 하는 방법
-    file_list = os.listdir("./uploads")
-    html = """<a href="/">홈</a><br><br>"""
-    html += "file_list: {}".format(file_list)
-    return html
+# @app.route('/list')
+# def render_file_list(): # 따로 list.html을 만들지 않고 list를 표시하게 하는 방법
+#     file_list = os.listdir("./uploads")
+#     html = """<a href="/">홈</a><br><br>"""
+#     html += "file_list: {}".format(file_list)
+#     return html
 
 # 삭제
 @app.route('/delete')
