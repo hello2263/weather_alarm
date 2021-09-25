@@ -114,7 +114,7 @@ def weather_alarm():
     return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
 
 
-def now_weather(time):
+def now_weather(time): # html로 각 구의 기상을 담고있는 리스트 안의 딕셔너리를 만들어주는 함수
     count = 0
     weather = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
     local, x, y = weather_local.find_location()
@@ -124,10 +124,9 @@ def now_weather(time):
     for i in cursor:
         weather[count] = i
         count += 1
-    # weather[숫자]인 이유는 한글로 표현했을경우 for문을 돌려야함
     return weather
 
-def count_time():
+def count_time(): # html에서 콤보박스에 표시될 날짜들 정하는 함수
     flag = 2
     count = 0
     count_date = []

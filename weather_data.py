@@ -12,7 +12,7 @@ from lib import weather_db, weather_local
 global today_date, x, y
 
 
-def set_date():
+def set_date(): # 기상청 API를 받아오는 시간대를 설정해주는 함수
     global today_time, today_date
     now = datetime.now()
     today_time = int(str(now.hour)+str(now.minute))
@@ -35,8 +35,7 @@ def set_date():
     elif today_time < 2315:
         today_time = '2030'
     else:
-        today_time = '2330'
-        
+        today_time = '2330'   
     if now.month < 10:
         today_month = '0'+str(now.month)
     else:
@@ -46,13 +45,12 @@ def set_date():
         today_day = '0'+str(today_day)
     else:
         today_day = str(today_day)
-    
     today_date = str(now.year)+today_month+today_day # 20210905
 
     return today_date + '-' + today_time # 20210905-1400
 
         
-def get_data():
+def get_data(): # 기상청에서 JSON으로 받기위한 파라미터들
     CallBackURL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
     params = '?' + urlencode({
         quote_plus("serviceKey"): 'XIjRFoewvUDp4EDhRpATADoatwElkiQ%2F1J0tDooGjBTKStjRtuW3Zu89iE9cBsK%2Bz299IJwkbaE%2F%2F7SzcVo2yA%3D%3D',
@@ -64,7 +62,6 @@ def get_data():
         quote_plus('nx'): x.pop(0),
         quote_plus('ny'): y.pop(0)
     })
-    
     # URL 데이터 파싱
     request = Request(CallBackURL + unquote(params))
     # API를 통해 데이터 GET
@@ -72,10 +69,9 @@ def get_data():
     # JSON으로 변환
     data = json.loads(response_body)
     item_data = data['response']['body']['items']['item']
-    
     return item_data
 
-def send_data(local):
+def send_data(local): # DB에 데이터를 보내는 함수
     count = 0
     weather_data = dict() # 조회한 오늘 날씨 정보의 그릇
     item_data = get_data()
@@ -100,7 +96,6 @@ def send_data(local):
             else:
                 weather_state = 'none'
             weather_data['하늘'] = weather_state
-            
         if count == 3:
             cursor.execute("INSERT INTO seoul(local, date, tmp, rain, sky) VALUES ('"+weather_data['지역']+"', '" +
                         weather_data['타임']+"', '" + weather_data['기온']+"', '"+weather_data['강수확률']+"', '"+
