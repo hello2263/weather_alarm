@@ -31,8 +31,8 @@
 		<div style='position: relative'>
 			<img height="800px" width="1200px" src="{{ url_for('static', filename='./map.jpg') }}"/><br>
 			<!-- 강남구 -->
-			<div style="left: 767px; bottom:205px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[0]['tmp']}}도/{{data[0]['rain']}}%<br>
+			<div style="left: 750px; bottom:160px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[0]['tmp']}}도/{{data[0]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[0]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[0]['sky'] == 'cloudy' %}
@@ -42,8 +42,8 @@
 				{% endif %}
 			</div>
 			<!-- 강동구 -->
-			<div style="left: 1005px; bottom:343px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[1]['tmp']}}도/{{data[1]['rain']}}%<br>
+			<div style="left: 990px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[1]['tmp']}}도/{{data[1]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[1]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[1]['sky'] == 'cloudy' %}
@@ -53,8 +53,8 @@
 				{% endif %}
 			</div>
 			<!-- 강북구 -->
-			<div style="left: 670px; bottom:580px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[2]['tmp']}}도/{{data[2]['rain']}}%<br>
+			<div style="left: 650px; bottom:535px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[2]['tmp']}}도/{{data[2]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[2]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[2]['sky'] == 'cloudy' %}
@@ -64,8 +64,8 @@
 				{% endif %}
 			</div>
 			<!-- 강서구 -->
-			<div style="left: 160px; bottom:375px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[3]['tmp']}}도/{{data[3]['rain']}}%<br>
+			<div style="left: 145px; bottom:330px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[3]['tmp']}}도/{{data[3]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[3]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[3]['sky'] == 'cloudy' %}
@@ -75,8 +75,8 @@
 				{% endif %}
 			</div>
 			<!-- 관악구 -->
-			<div style="left: 495px; bottom:113px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[4]['tmp']}}도/{{data[4]['rain']}}%<br>
+			<div style="left: 475px; bottom:70px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[4]['tmp']}}도/{{data[4]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[4]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[4]['sky'] == 'cloudy' %}
@@ -86,8 +86,8 @@
 				{% endif %}
 			</div>
 			<!-- 광진구 -->
-			<div style="left: 865px; bottom:322px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[5]['tmp']}}도/{{data[5]['rain']}}%<br>
+			<div style="left: 840px; bottom:275px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[5]['tmp']}}도/{{data[5]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[5]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[5]['sky'] == 'cloudy' %}
@@ -97,8 +97,8 @@
 				{% endif %}
 			</div>
 			<!-- 구로구 -->
-			<div style="left: 225px; bottom:185px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[6]['tmp']}}도/{{data[6]['rain']}}%<br>
+			<div style="left: 210px; bottom:140px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[6]['tmp']}}도/{{data[6]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[6]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[6]['sky'] == 'cloudy' %}
@@ -108,8 +108,8 @@
 				{% endif %}
 			</div>
 			<!-- 금천구 -->
-			<div style="left: 365px; bottom:130px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[7]['tmp']}}도/{{data[7]['rain']}}%<br>
+			<div style="left: 345px; bottom:85px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[7]['tmp']}}도/{{data[7]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[7]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[7]['sky'] == 'cloudy' %}
@@ -119,8 +119,8 @@
 				{% endif %}
 			</div>
 			<!-- 노원구 -->
-			<div style="left: 840px; bottom:605px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[8]['tmp']}}도/{{data[8]['rain']}}%<br>
+			<div style="left: 820px; bottom:560px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[8]['tmp']}}도/{{data[8]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[8]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[8]['sky'] == 'cloudy' %}
@@ -130,8 +130,8 @@
 				{% endif %}
 			</div>
 			<!-- 도봉구 -->
-			<div style="left: 730px; bottom:643px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[9]['tmp']}}도/{{data[9]['rain']}}%<br>
+			<div style="left: 710px; bottom:600px; width: 440px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[9]['tmp']}}도/{{data[9]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[9]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[9]['sky'] == 'cloudy' %}
@@ -141,8 +141,8 @@
 				{% endif %}
 			</div>
 			<!-- 동대문구 -->
-			<div style="left: 775px; bottom:423px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[10]['tmp']}}도/{{data[10]['rain']}}%<br>
+			<div style="left: 760px; bottom:380px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[10]['tmp']}}도/{{data[10]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[10]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[10]['sky'] == 'cloudy' %}
@@ -152,8 +152,8 @@
 				{% endif %}
 			</div>
 			<!-- 동작구 -->
-			<div style="left: 490px; bottom:215px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[11]['tmp']}}도/{{data[11]['rain']}}%<br>
+			<div style="left: 475px; bottom:170px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[11]['tmp']}}도/{{data[11]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[11]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[11]['sky'] == 'cloudy' %}
@@ -163,8 +163,8 @@
 				{% endif %}
 			</div>
 			<!-- 마포구 -->
-			<div style="left: 400px; bottom:367px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[12]['tmp']}}도/{{data[12]['rain']}}%<br>
+			<div style="left: 380px; bottom:325px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[12]['tmp']}}도/{{data[12]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[12]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[12]['sky'] == 'cloudy' %}
@@ -174,8 +174,8 @@
 				{% endif %}
 			</div>
 			<!-- 서대문구 -->
-			<div style="left: 460px; bottom:410px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[13]['tmp']}}도/{{data[13]['rain']}}%<br>
+			<div style="left: 445px; bottom:365px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[13]['tmp']}}도/{{data[13]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[13]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[13]['sky'] == 'cloudy' %}
@@ -185,8 +185,8 @@
 				{% endif %}
 			</div>
 			<!-- 서초구 -->
-			<div style="left: 655px; bottom:170px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[14]['tmp']}}도/{{data[14]['rain']}}%<br>
+			<div style="left: 640px; bottom:125px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[14]['tmp']}}도/{{data[14]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[14]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[14]['sky'] == 'cloudy' %}
@@ -196,8 +196,8 @@
 				{% endif %}
 			</div>
 			<!-- 성동구 -->
-			<div style="left: 745px; bottom:345px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[15]['tmp']}}도/{{data[15]['rain']}}%<br>
+			<div style="left: 725px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[15]['tmp']}}도/{{data[15]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[15]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[15]['sky'] == 'cloudy' %}
@@ -207,8 +207,8 @@
 				{% endif %}
 			</div>
 			<!-- 성북구 -->
-			<div style="left: 680px; bottom:483px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[16]['tmp']}}도/{{data[16]['rain']}}%<br>
+			<div style="left: 660px; bottom:438px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[16]['tmp']}}도/{{data[16]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[16]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[16]['sky'] == 'cloudy' %}
@@ -218,8 +218,8 @@
 				{% endif %}
 			</div>
 			<!-- 송파구 -->
-			<div style="left: 920px; bottom:230px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[17]['tmp']}}도/{{data[17]['rain']}}%<br>
+			<div style="left: 900px; bottom:185px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[17]['tmp']}}도/{{data[17]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[17]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[17]['sky'] == 'cloudy' %}
@@ -229,8 +229,8 @@
 				{% endif %}
 			</div>
 			<!-- 양천구 -->
-			<div style="left: 255px; bottom:255px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[18]['tmp']}}도/{{data[18]['rain']}}%<br>
+			<div style="left: 240px; bottom:213px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[18]['tmp']}}도/{{data[18]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[18]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[18]['sky'] == 'cloudy' %}
@@ -240,8 +240,8 @@
 				{% endif %}
 			</div>
 			<!-- 영등포구 -->
-			<div style="left: 395px; bottom:265px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[19]['tmp']}}도/{{data[19]['rain']}}%<br>
+			<div style="left: 385px; bottom:220px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[19]['tmp']}}도/{{data[19]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[19]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[19]['sky'] == 'cloudy' %}
@@ -251,8 +251,8 @@
 				{% endif %}
 			</div>
 			<!-- 용산구 -->
-			<div style="left: 580px; bottom:287px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[20]['tmp']}}도/{{data[20]['rain']}}%<br>
+			<div style="left: 565px; bottom:243px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[20]['tmp']}}도/{{data[20]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[20]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[20]['sky'] == 'cloudy' %}
@@ -262,8 +262,8 @@
 				{% endif %}
 			</div>
 			<!-- 은평구 -->
-			<div style="left: 445px; bottom:540px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[21]['tmp']}}도/{{data[21]['rain']}}%<br>
+			<div style="left: 430px; bottom:495px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[21]['tmp']}}도/{{data[21]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[21]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[21]['sky'] == 'cloudy' %}
@@ -273,8 +273,8 @@
 				{% endif %}
 			</div>
 			<!-- 종로구 -->
-			<div style="left: 585px; bottom:430px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[22]['tmp']}}도/{{data[22]['rain']}}%<br>
+			<div style="left: 565px; bottom:385px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[22]['tmp']}}도/{{data[22]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[22]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[22]['sky'] == 'cloudy' %}
@@ -284,8 +284,8 @@
 				{% endif %}
 			</div>
 			<!-- 중구 -->
-			<div style="left: 625px; bottom:365px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[23]['tmp']}}도/{{data[23]['rain']}}%<br>
+			<div style="left: 605px; bottom:322px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[23]['tmp']}}도/{{data[23]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[23]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[23]['sky'] == 'cloudy' %}
@@ -295,8 +295,8 @@
 				{% endif %}
 			</div>
 			<!-- 중랑구 -->
-			<div style="left: 885px; bottom:463px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
-				{{data[24]['tmp']}}도/{{data[24]['rain']}}%<br>
+			<div style="left: 868px; bottom:420px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">
+				{{data[24]['tmp']}}도/{{data[24]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[24]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
 				{% elif data[24]['sky'] == 'cloudy' %}
