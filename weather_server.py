@@ -59,7 +59,6 @@ def render_file_delete():
     return render_template('delete.html', files=files_list)
 
 
-
 """                    구동 부분                      """
 # 메세지 받기
 @app.route('/message_receive', methods = ['POST']) 

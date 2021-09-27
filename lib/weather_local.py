@@ -25,8 +25,6 @@ def find_user_location(user_location_x = 0, user_location_y = 0):
         print("find user_location", user_location, user_location_x, "", user_location_y)
         return user_location, user_location_x, user_location_y
 
-
-
 def find_location():
     data_pd = pd.read_excel('{}/{}'.format(Location, File),
                             header=None, index_col=None, names=None)
