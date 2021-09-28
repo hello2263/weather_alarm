@@ -80,15 +80,15 @@ def send_data_user(local, x, y):
             if weather_code == '1':
                 weather_state = 'rain'
             elif weather_code == '2':
-                weather_state = 'rain or snow'
+                weather_state = 'rain'
             elif weather_code == '3':
                 weather_state = 'snow'
             elif weather_code == '5':
                 weather_state = 'mist'
             elif weather_code == '6':
-                weather_state = 'mist or snowing'
+                weather_state = 'mist'
             elif weather_code == '7':
-                weather_state = 'snowing'
+                weather_state = 'snow'
             else:
                 weather_state = 'none'
             weather_data['상태'] = weather_state
@@ -104,24 +104,25 @@ def send_data_user(local, x, y):
     db.commit()
     print("data sended")
     db.close()
+    return weather_data
 
 def weather_to_speak(local):
     flag = 0
     speak = local+'의 현재 날씨를 말해줄게     '
     speak += '기온은 ' + weather_data['기온'] + '도   '
     speak += '습도는 ' + weather_data['습도'] + '퍼센트야   '
-    if weahter_code == '1' | weahter_code == '2':
+    if weather_data['상태'] == 'rain' :
         speak += '현재 비가 내리고 있어 '
         flag = 1
-    elif weahter_code == '3' | weahter_code == '7':
+    elif weather_data['상태'] == 'snow' :
         speak += '현재 눈이 내리고 있어'
         flag = 1
-    elif weahter_code == '5' | weahter_code == '6':
+    elif weather_data['상태'] == 'mist' :
         speak += '현재 부슬비가 내리고 있어'
         flag = 1
     else:
         speak += '현재 내리고 있는건 없어'
-    if flag == 1 & weather_data['강수량'] != 0:
+    if flag == 1 and weather_data['강수량'] != '0':
         speak += '강수량은 ' + weather_data['강수량'] + '밀리미터야'
     return str(speak)
 
