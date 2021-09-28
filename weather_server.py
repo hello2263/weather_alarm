@@ -8,7 +8,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from lib import weather_db, weather_local, speech_tts, speech_stt
 import werkzeug, os, sys, time, weather_data, weather_now
-global db, cursor 
+global db, cursor
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
@@ -16,11 +16,8 @@ from utils.config import Config as cfg
 sys.path.append(cfg.OPENPIBO_PATH + '/edu')
 from pibo import Edu_Pibo
 
-app = Flask(__name__) 
-api = Api(app)
 
-# db접속
-db, cursor = weather_db.db_connecting('root', 'qwe123')
+
 
 """                    템플릿 부분                    """
 # 홈
@@ -150,43 +147,45 @@ def speak_to_user():
     speech_tts.tts_test('날씨를 알고싶은 서울의 구를 말해줘')
     ret = speech_stt.stt_test()
     local = ret['data']
+    if local[-1] != '구':
+        local += '구'
     x, y = weather_local.find_speak_location(local)
-    weather_now.send_data_user(local, x, y)
-    speech_tts.tts_test(weather_now.weather_to_speak(local))
+    if (x and y) != 0:
+        weather_now.send_data_user(local, x, y)
+        speech_tts.tts_test(weather_now.weather_to_speak(local))
+    else:
+        speech_tts.tts_test('원하는 지역을 찾지 못했어')
 
 def msg_device(msg):
+    pibo.set_motion('stop', 1)
     print(f'message : {msg}')
     check = msg.split(':')[1]
-
     if check.find('touch') > -1:
-        pibo.eye_on('aqua')
-        pibo.set_motion('welcome', 1)
-        speak_to_user()
-        pibo.eye_on('pink')
-        pibo.set_motion('stop', 1)
-
+        touch_flag += 1
+        if touch_flag > 2:
+            pibo.eye_on('aqua')
+            pibo.set_motion('welcome', 1)
+            speak_to_user()
+            pibo.eye_on('pink')
+            pibo.set_motion('stop', 1)
 
 def device_thread_test():
     ret = pibo.start_devices(msg_device)
-    print(f'ret : {ret}')
-
 
 if __name__ == '__main__': 
+    db, cursor = weather_db.db_connecting('root', 'qwe123')
+    app = Flask(__name__) 
+    api = Api(app)
+
     pibo = Edu_Pibo()
     device_thread_test()
 
-    # speak_to_user()
-
-    # speech_tts.tts_test('현재 서버를 실행중이야')
     app.run(debug = False, port = 108)
     # app.run(host = '0.0.0.0', debug = True)
 
     
-
+    # 오류때 다시 작동하는 법
 
     # 구문별 띄어서 말하는 법
-    # 가끔 speak 후 종료가 안됨
 
     # 좀 더 빠르게 실행하는 법
-    # 스레드 중 터치 감지를 어떻게 하는지
-    # 스레드처럼 동시에 돌리는 법 -> app.run하면서 터치감지
