@@ -40,7 +40,7 @@ def set_nowdate():
     today_date = str(now.year)+today_month+today_day
     return today_date
 
-def get_data_now():
+def get_data_now(x, y):
     ##################################################### 파라미터 설정
     CallBackURL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'
     params = '?' + urlencode({
@@ -63,8 +63,12 @@ def get_data_now():
     item_data = data['response']['body']['items']['item']
     return item_data
 
-def send_data_user(local):
-    item_data = get_data_now()
+def send_data_user(local, x, y):
+    global weather_data
+    # db접속
+    db, cursor = weather_db.db_connecting('root', 'qwe123')
+
+    item_data = get_data_now(x, y)
     weather_data = dict() # 테이블에 넣을 데이터로우
     weather_data['지역'] = str(local)
     ##################################################### 테이블에 넣을 데이터 정제
@@ -90,7 +94,7 @@ def send_data_user(local):
             weather_data['상태'] = weather_state
         if item['category'] == 'RN1':  # 강수량체크
             weather_data['강수량'] = item['obsrValue']
-        if item['category'] == 'REH':  # 강수량체크
+        if item['category'] == 'REH':  # 습도체크
             weather_data['습도'] = item['obsrValue']
     cursor.execute("INSERT INTO User(now_date, now_time, local, tmp, state, rainfall, humidity) VALUES "
                 "('"+today_date+"', '"+user_hour+user_minute+
@@ -99,12 +103,34 @@ def send_data_user(local):
                 "', '"+weather_data['강수량']+"', '"+weather_data['습도']+"')")
     db.commit()
     print("data sended")
+    db.close()
+
+def weather_to_speak(local):
+    flag = 0
+    speak = local+'의 현재 날씨를 말해줄게     '
+    speak += '기온은 ' + weather_data['기온'] + '도   '
+    speak += '습도는 ' + weather_data['습도'] + '퍼센트야   '
+    if weahter_code == '1' | weahter_code == '2':
+        speak += '현재 비가 내리고 있어 '
+        flag = 1
+    elif weahter_code == '3' | weahter_code == '7':
+        speak += '현재 눈이 내리고 있어'
+        flag = 1
+    elif weahter_code == '5' | weahter_code == '6':
+        speak += '현재 부슬비가 내리고 있어'
+        flag = 1
+    else:
+        speak += '현재 내리고 있는건 없어'
+    if flag == 1 & weather_data['강수량'] != 0:
+        speak += '강수량은 ' + weather_data['강수량'] + '밀리미터야'
+    return str(speak)
+
 
 if __name__ == "__main__":
-    # db접속
-    db, cursor = weather_db.db_connecting('root', 'qwe123')
     # user의 지역 x, y좌표 따기
     local, x, y = weather_local.find_user_location()
-    send_data_user(local)
+    send_data_user(local, x, y)
     print('data finished')
-    db.close()
+
+
+    

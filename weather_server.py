@@ -6,10 +6,15 @@ from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from bs4 import BeautifulSoup
-from lib import weather_db, weather_local
-import weather_data
-import werkzeug, os
+from lib import weather_db, weather_local, speech_tts
+import werkzeug, os, sys, time, weather_data, weather_now
 global db, cursor 
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from utils.config import Config as cfg
+
+sys.path.append(cfg.OPENPIBO_PATH + '/edu')
+from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
@@ -141,6 +146,49 @@ def count_time(): # html에서 콤보박스에 표시될 날짜들 정하는 함
             flag += 1
     return count_date, count
 
+def speak_to_user():
+    local, x, y = weather_local.find_user_location()
+    weather_now.send_data_user(local, x, y)
+    speech_tts.tts_test(weather_now.weather_to_speak(local))
+
+def msg_device(msg):
+    print(f'message : {msg}')
+    check = msg.split(':')[1]
+
+    if check.find('touch') > -1:
+        ret_text = pibo.stt()
+        
+        ret = decode(ret_text['data'])
+
+        speak(ret)
+        pibo.set_motion('wave1', 1)
+
+def device_thread_test():
+    ret = pibo.start_devices(msg_device)
+    print(f'ret : {ret}')
+
+
 if __name__ == '__main__': 
-    app.run(debug = True, port = 108)
+    pibo = Edu_Pibo()
+    pibo.eye_on('pink')
+    print('45124')
+    pibo.set_motion('welcome', 1)
+    pibo.eye_on('purple')
+    pibo.set_motion('stop', 1)
+    
+    print('start check device')
+    device_thread_test()
+
+
+    # speech_tts.tts_test('현재 서버를 실행중이야')
+    # app.run(debug = True, port = 108)
     # app.run(host = '0.0.0.0', debug = True)
+
+    # speak_to_user()
+
+
+    # 구문별 띄어서 말하는 법
+    # 스레드처럼 동시에 돌리는 법
+    # 가끔 speak 후 종료가 안됨
+    # 좀 더 빠르게 실행하는 법
+    # 2번 서버를 실행함
