@@ -11,7 +11,6 @@ import json
 from lib import weather_db, weather_local
 global today_date, x, y
 
-
 def set_date(): # 기상청 API를 받아오는 시간대를 설정해주는 함수
     global today_time, today_date
     now = datetime.now()
@@ -106,7 +105,6 @@ def send_data(local): # DB에 데이터를 보내는 함수
     print(local + "data sended")
 
 if __name__ == "__main__":
-    # db접속
     db, cursor = weather_db.db_connecting('root', 'qwe123')
     unique_date = set_date() # 데이터 정제 후 유니크키 추출
     local, x, y = weather_local.find_location() # 엑셀에서 구마다 지역이름, x, y

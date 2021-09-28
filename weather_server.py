@@ -16,7 +16,8 @@ from utils.config import Config as cfg
 sys.path.append(cfg.OPENPIBO_PATH + '/edu')
 from pibo import Edu_Pibo
 
-
+app = Flask(__name__) 
+api = Api(app)
 
 
 """                    템플릿 부분                    """
@@ -153,39 +154,42 @@ def speak_to_user():
     if (x and y) != 0:
         weather_now.send_data_user(local, x, y)
         speech_tts.tts_test(weather_now.weather_to_speak(local))
+        pibo_reset()
     else:
+        pibo.eye_on('red')
         speech_tts.tts_test('원하는 지역을 찾지 못했어')
+        pibo_reset()
 
 def msg_device(msg):
     pibo.set_motion('stop', 1)
     print(f'message : {msg}')
     check = msg.split(':')[1]
     if check.find('touch') > -1:
-        touch_flag += 1
-        if touch_flag > 2:
-            pibo.eye_on('aqua')
-            pibo.set_motion('welcome', 1)
-            speak_to_user()
-            pibo.eye_on('pink')
-            pibo.set_motion('stop', 1)
+        pibo.eye_on('purple')
+        pibo.set_motion('welcome', 3)
+        speak_to_user()
 
 def device_thread_test():
     ret = pibo.start_devices(msg_device)
 
-if __name__ == '__main__': 
-    db, cursor = weather_db.db_connecting('root', 'qwe123')
-    app = Flask(__name__) 
-    api = Api(app)
+def pibo_reset():
+    pibo.eye_on('aqua')
+    pibo.set_motion('stop', 1)
 
+if __name__ == '__main__': 
     pibo = Edu_Pibo()
+    pibo_reset()
+    # speech_tts.tts_test('서버를 실행할게')
+    db, cursor = weather_db.db_connecting('root', 'qwe123')
     device_thread_test()
 
     app.run(debug = False, port = 108)
     # app.run(host = '0.0.0.0', debug = True)
 
-    
-    # 오류때 다시 작동하는 법
-
+    # 동작 끝날때까지 기다리는법
+    # 신호를 2번 받고 처리하게 하는 법
     # 구문별 띄어서 말하는 법
-
     # 좀 더 빠르게 실행하는 법
+    # 눈 색깔 만드는법
+    # have a nice day ;) 찾아서 죽이기
+    # table에서 행삭제
