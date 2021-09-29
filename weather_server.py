@@ -18,6 +18,7 @@ from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
+count = 0
 
 
 """                    템플릿 부분                    """
@@ -148,11 +149,11 @@ def speak_to_user():
     speech_tts.tts_test('날씨를 알고싶은 서울의 구를 말해줘')
     ret = speech_stt.stt_test()
     local = ret['data']
-    if local[-1] != '구':
-        local += '구'
+ 
     x, y = weather_local.find_speak_location(local)
     if (x and y) != 0:
         weather_now.send_data_user(local, x, y)
+        speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
         speech_tts.tts_test(weather_now.weather_to_speak(local))
         pibo_reset()
     else:
@@ -161,10 +162,15 @@ def speak_to_user():
         pibo_reset()
 
 def msg_device(msg):
+    global count # 중요
     pibo.set_motion('stop', 1)
     print(f'message : {msg}')
     check = msg.split(':')[1]
+    
     if check.find('touch') > -1:
+        count +=1
+
+    if counnt > 1:
         pibo.eye_on('purple')
         pibo.set_motion('welcome', 3)
         speak_to_user()
@@ -179,17 +185,26 @@ def pibo_reset():
 if __name__ == '__main__': 
     pibo = Edu_Pibo()
     pibo_reset()
+    pibo.set_motion('welcome', 3)
+    # pibo_reset()
     # speech_tts.tts_test('서버를 실행할게')
-    db, cursor = weather_db.db_connecting('root', 'qwe123')
-    device_thread_test()
+    # db, cursor = weather_db.db_connecting('root', 'qwe123')
+    # device_thread_test()
 
-    app.run(debug = False, port = 108)
+    # app.run(debug = False, port = 108)
     # app.run(host = '0.0.0.0', debug = True)
 
-    # 동작 끝날때까지 기다리는법
-    # 신호를 2번 받고 처리하게 하는 법
-    # 구문별 띄어서 말하는 법
+    # 동작 끝날때까지 기다리는법 -> TTS단에서 스레드로 플래그
+    # 모션쪽에만 스레드
+    
+    # css 5
+    
+    # 눈 색깔 만드는법 def eye_on(self, *color):
+    # 단어 서칭
+
+
+    # 발표자료 전문화 -> 플로우차트나 db쪽 발표자료 검토
+    # vscode를 발표때 이용
+
+
     # 좀 더 빠르게 실행하는 법
-    # 눈 색깔 만드는법
-    # have a nice day ;) 찾아서 죽이기
-    # table에서 행삭제
