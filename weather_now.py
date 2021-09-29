@@ -115,26 +115,22 @@ def send_data_user(local, x, y):
 def weather_to_speak(local):
     flag = 0
     speak = []
-    speak = '기온은 ' + weather_data['기온'] + '도이고'
-    speak += '습도는 ' + weather_data['습도'] + '퍼센트야'
+    speak = '기온은 ' + weather_data['기온'] + '도이고                       '
+    speak += '습도는 ' + weather_data['습도'] + '퍼센트야                     '
     if weather_data['상태'] == 'rain' :
-        speak += '현재 비가 내리고 있는데'
+        speak += '현재 비가 내리고 있는데                      '
         flag = 1
     elif weather_data['상태'] == 'snow' :
-        speak += '현재 눈이 내리고 있는데
+        speak += '현재 눈이 내리고 있는데                        '
         flag = 1
     elif weather_data['상태'] == 'mist' :
-        speak += '현재 부슬비가 내리고 있는데'
+        speak += '현재 부슬비가 내리고 있는데                          '
         flag = 1
     else:
-        speak += '현재 내리고 있는건 없어'
+        speak += '현재 내리고 있는건 없어                             '
     if (flag == 1 and weather_data['강수량']) != '0':
-        speak += '강수량은 ' + weather_data['강수량'] + '밀리미터야'
+        speak += '강수량은 ' + weather_data['강수량'] + '밀리미터야                    '
     return str(speak)
-
-def
-
-
 
 if __name__ == "__main__":
     local, x, y = weather_local.find_user_location()
