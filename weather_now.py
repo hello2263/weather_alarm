@@ -128,7 +128,8 @@ def weather_to_speak(local):
         flag = 1
     else:
         speak += '현재 내리고 있는건 없어                             '
-    if (flag == 1 and weather_data['강수량']) != '0':
+
+    if ((flag == 1) and (weather_data['강수량']) != '0'):
         speak += '강수량은 ' + weather_data['강수량'] + '밀리미터야                    '
     return str(speak)
 
