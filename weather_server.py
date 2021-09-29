@@ -160,7 +160,7 @@ def speak_to_user():
         pibo.eye_on('red')
         speech_tts.tts_test('원하는 지역을 찾지 못했어')
         pibo_reset()
-
+print('test')
 def msg_device(msg):
     global count # 중요
     pibo.set_motion('stop', 1)
