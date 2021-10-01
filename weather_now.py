@@ -96,7 +96,7 @@ def send_data_user(local, x, y):
             elif weather_code == '7':
                 weather_state = 'snow'
             else:
-                weather_state = 'none'
+                weather_state = 'normal'
             weather_data['상태'] = weather_state
         if item['category'] == 'RN1':  # 강수량체크
             weather_data['강수량'] = item['obsrValue']

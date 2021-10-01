@@ -6,7 +6,9 @@ from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from bs4 import BeautifulSoup
-from lib import weather_db, weather_local, speech_tts, speech_stt
+from lib import weather_db, weather_local
+import json, requests
+# from lib import weather_db, weather_local, speech_tts, speech_stt
 import werkzeug, os, sys, time, weather_data, weather_now
 global db, cursor
 
@@ -14,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
 
 sys.path.append(cfg.OPENPIBO_PATH + '/edu')
-from pibo import Edu_Pibo
+# from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
@@ -62,7 +64,26 @@ def render_file_delete():
     files_list = os.listdir("./uploads")
     return render_template('delete.html', files=files_list)
 
+@app.route('/kakao')
+def kakao_login():
+    return render_template('kakao.html')
 
+@app.route('/oauth')
+def oatuh():
+    code = str(request.args.get('code'))
+    url = "https://kauth.kakao.com/oauth/token"
+    payload = "grant_type=authorization_code&client_id=91d3b37e4651a9c3ab0216abfe877a50&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
+    headers = {
+        'Content-Type': "application/x-www-form-urlencoded",
+        'Cache-Control': "no-cache",
+    }
+    response = requests.request("POST", url, data=payload, headers=headers)
+    access_token = json.loads(((response.text).encode('utf-8')))['access_token']
+    url = "https://kapi.kakao.com/v1/user/signup"
+    headers.update({'Authorization' : "Bearer " + str(access_token)})
+    response = requests.request("POST", url, headers=headers)
+    return (response.text)
+    
 """                    구동 부분                      """
 # 메세지 받기
 @app.route('/message_receive', methods = ['POST']) 
@@ -184,13 +205,13 @@ def pibo_reset():
     pibo.set_motion('stop', 1)
 
 if __name__ == '__main__': 
-    pibo = Edu_Pibo()
-    pibo_reset()
+    # pibo = Edu_Pibo()
+    # pibo_reset()
     # speech_tts.tts_test('서버를 실행할게')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
-    device_thread_test()
+    # device_thread_test()
 
-    app.run(debug = False, port = 108)
+    app.run(debug = False, port = 8000)
     # app.run(host = '0.0.0.0', debug = True)
 
 
