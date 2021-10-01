@@ -79,8 +79,13 @@ def oatuh():
     }
     response = requests.request("POST", url, data=payload, headers=headers)
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
-    url = "https://kapi.kakao.com/v1/user/signup"
+    
+    url = "https://kapi.kakao.com/v2/user/signup"
     headers.update({'Authorization' : "Bearer " + str(access_token)})
+    response = requests.request("POST", url, headers=headers)
+    print(response.text)
+    
+    url = "https://kapi.kakao.com/v2/user/me"
     response = requests.request("POST", url, headers=headers)
     return (response.text)
     
