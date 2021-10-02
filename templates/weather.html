@@ -1,5 +1,5 @@
 <html>
-	<head><br><br><br>
+	<head>
 		<title>서울특별시 기온</title>
 		<script type='text/javascript'>
 			function out(){
@@ -9,13 +9,20 @@
 			}
 		</script>
 	</head>
+	
 
 	<body>
-		<a href="/">홈</a> <div id='head' style='font: normal bold 1.5em/1em Georgiz'>
-			<center>
-				기준시간: {{date}}<br><br>
-			</center>
-		</div>
+		<center>
+			<a href="/">
+				<div style="color: rgb(175, 184, 178); font-size: 5em; font-weight: bold;">
+				Dogyu's Server
+				</div>
+			</a>
+			<br><br>
+			<div style="font-size: 1.6em; color: rgb(175, 184, 178);">
+			기준시간: {{date}}<br><br>
+			</div>
+		</center>
 		시간선택 (3시간 간격)<br>
 		<form action = '' method='post'>
 			<select name = "Time" id = 'Time' >
@@ -26,9 +33,14 @@
 			</select> <a href="" onclick=" location.href = '/weather'+ out(this.value); return false;"><button>확인</button></a>
 		</form>
 	</body>
+	<style>
+		a{
+			text-decoration-line: none;
+		}
+	</style>
 
 	<body>
-		<div style='position: relative'>
+		<div style='position: absolute'>
 			<img height="800px" width="1200px" src="{{ url_for('static', filename='./map.jpg') }}"/><br>
 			<!-- 강남구 -->
 			<div style="left: 750px; bottom:160px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute;">

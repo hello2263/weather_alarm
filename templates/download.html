@@ -3,17 +3,85 @@
 		<title>파일 다운로드</title>
 	</head>
 	<body>
-		<a href="/">홈</a><br>
+		<center>
+			<a href="/">
+				<div style="color: rgb(175, 184, 178); font-size: 5em; font-weight: bold;">
+				Dogyu's Server
+				</div>
+			</a>
+			<br><br>
+		</center>
 	</body>
+	<style>
+		a{
+			text-decoration-line: none;
+		}
+		html,body{
+			height:100%;
+		}
+		body{
+			background-color: rgba(15, 15, 15, 0.781);
+		}
+		body:before{
+			content:'';
+			display:inline-block;
+		}
+		input{
+			background:#00000000;
+			color:rgb(175, 184, 178);
+			border:none;
+			position:relative;
+			height:60px;
+			font-size:1.6em;
+			padding:0 2em;
+			cursor:pointer;
+			transition:800ms ease all;
+			outline:none;
+		}
+		#sub:hover{
+			background:rgba(5, 5, 5, 0.479);
+		}
+		#sub:before,
+		#sub:after{
+			content:'';
+			position:absolute;
+			top:0;
+			right:0;
+			height:2px;
+			width:0;
+			background: #deff24;
+			transition:400ms ease all;
+		}
+		#sub:after{
+			right:inherit;
+			top:inherit;
+			left:0;
+			bottom:0;
+		}
+		#sub:hover:before,
+		#sub:hover:after{
+			width:100%;
+			transition:800ms ease all;
+		}
+	</style>
 	<body>
-		<form action = "/fileDownload" method = "POST" enctype = "multipart/form-data">
-        <input type = "text" name = "file" />
-    	<input type = "submit"/><br><br>
-    	<ul>
-    		{% for n in files %}
-    		<li>{{n}}</li>
-    		{% endfor %}
-    	</ul>
+		<br><br><br><br>
+		<center>
+			<form action = "/fileDownload" method = "POST" enctype = "multipart/form-data">
+				<input type = "text" name = "file" style="background-color: white;" /><br><br><br><br>
+				<div id = "sub" >
+					<input type = "submit" value="다운로드"/>
+				</div>
+					<ul>
+						<br><br><br><br>
+						<div style="font-size:1.6em; color:rgb(175, 184, 178);">
+						파일 목록 <br><br>
+						{% for n in files %}
+						<li>{{n}}</li>
+						{% endfor %}
+					</ul>
+				</div>
+		</center>
 	</body>
 </html>
  
