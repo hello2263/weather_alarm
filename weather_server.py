@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from lib import weather_db, weather_local
 import json, requests
 # from lib import weather_db, weather_local, speech_tts, speech_stt
-import werkzeug, os, sys, time, weather_data, weather_now
+import werkzeug, os, sys, time, weather_data, weather_now, ctypes
 global db, cursor
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -20,7 +20,7 @@ sys.path.append(cfg.OPENPIBO_PATH + '/edu')
 
 app = Flask(__name__) 
 api = Api(app)
-count = 0
+# count = 0
 
 
 """                    템플릿 부분                    """
@@ -64,10 +64,12 @@ def render_file_delete():
     files_list = os.listdir("./uploads")
     return render_template('delete.html', files=files_list)
 
+# 카카오
 @app.route('/kakao')
 def kakao_login():
     return render_template('kakao.html')
 
+# 토큰
 @app.route('/oauth')
 def oatuh():
     code = str(request.args.get('code'))
@@ -79,14 +81,16 @@ def oatuh():
     }
     response = requests.request("POST", url, data=payload, headers=headers)
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
-    
-    url = "https://kapi.kakao.com/v2/user/signup"
+    print(response.text)
+     
+    url = "https://kapi.kakao.com/v1/user/signup"
     headers.update({'Authorization' : "Bearer " + str(access_token)})
     response = requests.request("POST", url, headers=headers)
     print(response.text)
     
     url = "https://kapi.kakao.com/v2/user/me"
     response = requests.request("POST", url, headers=headers)
+    print(response.text)
     return (response.text)
     
 """                    구동 부분                      """
@@ -97,34 +101,51 @@ def message_receive():
     return render_template('message_receive.html', data = value)
 
 # 파일 업로드
-@app.route('/fileUpload', methods = ['POST', 'GET'])
+@app.route('/upload', methods = ['POST', 'GET'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['file']
-        f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
-        return """<a href="/">홈</a><br><br>"""+'uploads 디렉토리 -> 파일 업로드 성공'
+        try:
+            f = request.files['file']
+            f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
+            message = ctypes.windll.user32.MessageBoxW(None, '업로드 성공!','success', 0)
+            return render_template('upload.html')
+        except:
+            message = ctypes.windll.user32.MessageBoxW(None, '파일명을 확인해주세요!','error', 0)
+            if message == 1:
+                print('ok')
+            return render_template('upload.html')
 
 # 파일 다운로드
-@app.route('/fileDownload', methods = ['GET', 'POST'])
+@app.route('/download', methods = ['GET', 'POST'])
 def download_file():
     if request.method == 'POST':
-        sw = 0 # sw라는 변수가 작동하는지 의문이 듬 -> 빼고 실험해봐야 함
         files_list = os.listdir("./uploads")
-        for x in files_list:
-            if(x==request.form['file']):
-                sw=1
-        path = "./uploads/"
-        return send_file(path + request.form['file'],
-				attachment_filename = request.form['file'],
-				as_attachment=True) #파일을 경로에 저장하는데 파일 명은 request.form으로 받고 as_attachment인자 찾아보기
+        try:
+            path = "./uploads/"        
+            send_file(path + request.form['file'],
+                    attachment_filename = request.form['file'],
+                    as_attachment=True) #파일을 경로에 저장하는데 파일 명은 request.form으로 받고 as_attachment인자 찾아보기
+            message = ctypes.windll.user32.MessageBoxW(None, '다운로드 성공!','success', 0)
+            return render_template('download.html', files=files_list)
+        except:
+            message = ctypes.windll.user32.MessageBoxW(None, '파일명을 확인해주세요!','error', 0)
+            return render_template('download.html', files=files_list)
 
 # 파일 삭제
-@app.route('/fileDelete', methods = ['POST'])
+@app.route('/delete', methods = ['POST'])
 def delete_file():
     if request.method == 'POST':
-        path = "./uploads/"
-        os.remove(path+"{}".format(request.form['file']))
-        return """<a href="/">홈</a><br><br>"""+'파일 삭제 성공'
+        files_list = os.listdir("./uploads")
+        try:
+            path = "./uploads/"
+            os.remove(path+"{}".format(request.form['file']))
+            message = ctypes.windll.user32.MessageBoxW(None, '삭제 성공!','success', 0)
+            return render_template('delete.html', files=files_list)
+        except:
+                message = ctypes.windll.user32.MessageBoxW(None, '파일명을 확인해주세요!','error', 0)
+                if message == 1:
+                    print('ok')
+                return render_template('delete.html', files=files_list)
 
 # 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
@@ -171,7 +192,7 @@ def count_time(): # html에서 콤보박스에 표시될 날짜들 정하는 함
             flag += 1
     return count_date, count
 
-def speak_to_user():
+def speak_to_user(): # Pibo가 user에게 날씨 말해줌
     speech_tts.tts_test('날씨를 알고싶은 서울의 구를 말해줘')
     ret = speech_stt.stt_test()
     sentence = ret['data']
@@ -187,7 +208,7 @@ def speak_to_user():
         speech_tts.tts_test('원하는 지역을 찾지 못했어')
         pibo_reset()
 
-def msg_device(msg):
+def msg_device(msg): # 터치센서 감지하면 작동
     global count # 중요
     pibo.set_motion('stop', 1)
     print(f'message : {msg}')
@@ -202,10 +223,10 @@ def msg_device(msg):
         speak_to_user()
         count = 0
 
-def device_thread_test():
+def device_thread_test(): # 쓰레드
     ret = pibo.start_devices(msg_device)
 
-def pibo_reset():
+def pibo_reset(): # 초기화
     pibo.eye_on('aqua')
     pibo.set_motion('stop', 1)
 
@@ -217,7 +238,7 @@ if __name__ == '__main__':
     # device_thread_test()
 
     app.run(debug = False, port = 8000)
-    # app.run(host = '0.0.0.0', debug = True)
+    # app.run(host = '0.0.0.0', debug = False, port = 8000)
 
 
 

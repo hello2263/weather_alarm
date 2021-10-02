@@ -39,6 +39,18 @@
 			transition:800ms ease all;
 			outline:none;
 		}
+		textarea{
+			background:#00000000;
+			color:rgb(175, 184, 178);
+			border:none;
+			position:relative;
+			height:60px;
+			font-size:1.6em;
+			padding:0 2em;
+			cursor:pointer;
+			transition:800ms ease all;
+			outline:none;
+		}
 		#sub:hover{
 			background:rgba(5, 5, 5, 0.479);
 		}
@@ -68,13 +80,15 @@
 	<body>
 		<br><br><br><br>
 		<center>
-		<form action="/message_receive" method="post">
+		<form action="http://127.0.0.1:8000/index.php" method="POST">
 			<div style="font-size:1.6em; color:rgb(175, 184, 178);">
-				<p>전할 말 : <input type="text" name="message" style="background-color: white;"></p>
+				<p>닉네임 : <input type="text" name="nick" style="background-color: white;"></p>
+				<p>전할 말 : <textarea type="text" name="msg" style="background-color: white;"></textarea></p>
 			</div>
 			<div id = "sub">
 				<input type="submit" value="전송"/>
 			</div>
+		</form>
 		</center>
 	</body>
 
