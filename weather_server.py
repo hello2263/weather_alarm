@@ -82,29 +82,32 @@ def kakao_login():
 @app.route('/oauth')
 def oatuh():
     global user_code
-    code = str(request.args.get('code'))
-    url = "https://kauth.kakao.com/oauth/token"
-    payload = "grant_type=authorization_code&client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
-    headers = {
-        'Content-Type': "application/x-www-form-urlencoded",
-        'Cache-Control': "no-cache",
-    }
-    response = requests.request("POST", url, data=payload, headers=headers)
-    access_token = json.loads(((response.text).encode('utf-8')))['access_token']
-    print(response.text)
+    # code = str(request.args.get('code'))
+    # url = "https://kauth.kakao.com/oauth/token"
+    # payload = "grant_type=authorization_code&client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
+    # headers = {
+    #     'Content-Type': "application/x-www-form-urlencoded",
+    #     'Cache-Control': "no-cache",
+    # }
+    # response = requests.request("POST", url, data=payload, headers=headers)
+    # access_token = json.loads(((response.text).encode('utf-8')))['access_token']
+    # print(response.text)
      
-    url = "https://kapi.kakao.com/v1/user/signup"
-    headers.update({'Authorization' : "Bearer " + str(access_token)})
-    response = requests.request("POST", url, headers=headers)
-    print(response.text)
+    # url = "https://kapi.kakao.com/v1/user/signup"
+    # headers.update({'Authorization' : "Bearer " + str(access_token)})
+    # response = requests.request("POST", url, headers=headers)
+    # print(response.text)
     
-    url = "https://kapi.kakao.com/v2/user/me"
-    response = requests.request("POST", url, headers=headers)
-    print(response.text)
+    # url = "https://kapi.kakao.com/v2/user/me"
+    # response = requests.request("POST", url, headers=headers)
+    # print(response.text)
     user_url = request.url
     url_index = user_url.index('code=') + 5
     user_code = user_url[url_index:]
-    return (response.text)
+    print(user_code)
+    # return (response.text)
+
+
     
 """                    구동 부분                      """
 # 메세지 받기
