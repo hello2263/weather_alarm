@@ -179,7 +179,6 @@ def weather_alarm():
     today_time = weather_data.set_date()
     return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
 
-
 def now_weather(time): # html로 각 구의 기상을 담고있는 리스트 안의 딕셔너리를 만들어주는 함수
     count = 0
     weather = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
@@ -209,30 +208,40 @@ def count_time(): # html에서 콤보박스에 표시될 날짜들 정하는 함
     return count_date, count
 
 def speak_to_user(): # Pibo가 user에게 날씨 말해줌
-    speech_tts.tts_test('날씨를 알고싶은 서울의 구를 말해줘')
+    speech_tts.tts_test('날씨와 관련해서 무엇을 도와줄까?')
     ret = speech_stt.stt_test()
     sentence = ret['data']
     local = weather_local.find_speak_local(sentence)
     x, y = weather_local.find_speak_location(local)
-    if (x and y) != 0:
-        weather_now.send_data_user(local, x, y)
-        speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
-        speech_tts.tts_test(weather_now.weather_to_speak(local))
-        pibo_reset()
+    if ('카톡' or '보내') in sentence:
+        if (x and y) != 0:
+            weather = weather_now.send_data_user(local, x, y)
+            weather_kakao.kakao_me_send(weather)
+            speech_tts.tts_test('카톡으로 보냈어')
+            pibo_reset()
+        else:
+            pibo.eye_on('red')
+            speech_tts.tts_test('원하는 지역을 찾지 못했어')
+            pibo_reset()
+
     else:
-        pibo.eye_on('red')
-        speech_tts.tts_test('원하는 지역을 찾지 못했어')
-        pibo_reset()
+        if (x and y) != 0:
+            weather_now.send_data_user(local, x, y)
+            speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
+            speech_tts.tts_test(weather_now.weather_to_speak(local))
+            pibo_reset()
+        else:
+            pibo.eye_on('red')
+            speech_tts.tts_test('원하는 지역을 찾지 못했어')
+            pibo_reset()
 
 def msg_device(msg): # 터치센서 감지하면 작동
     global count # 중요
     pibo.set_motion('stop', 1)
     print(f'message : {msg}')
     check = msg.split(':')[1]
-    
     if check.find('touch') > -1:
         count +=1
-
     if count > 1:
         pibo.eye_on('purple')
         pibo.set_motion('welcome', 3)
