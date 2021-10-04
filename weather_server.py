@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from lib import weather_db, weather_local
 import json, requests
 # from lib import weather_db, weather_local, speech_tts, speech_stt
-import werkzeug, os, sys, time, weather_data, weather_now, ctypes
+import werkzeug, os, sys, time, weather_data, weather_now, ctypes, weather_kakao
 global db, cursor
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -20,8 +20,6 @@ sys.path.append(cfg.OPENPIBO_PATH + '/edu')
 
 app = Flask(__name__) 
 api = Api(app)
-# count = 0
-
 
 """                    템플릿 부분                    """
 # 홈
@@ -29,15 +27,26 @@ api = Api(app)
 def render_home():
     return render_template('home.html')
 
-# 수신
-@app.route('/message_receive')
-def render_message_receive():
-    return render_template('message_receive.html')
 
 # 발신
-@app.route('/message_send')
+@app.route('/message_send', methods = ['GET', "POST"])
 def render_message_send():
+    if request.method == 'POST':
+        from weather_now import set_nowdate
+        db, cursor = weather_db.db_connecting('root', 'qwe123')
+        nick = request.form['nick']
+        msg = request.form['msg']
+        now_date = set_nowdate()
+        try:
+            cursor.execute("INSERT INTO faq(now_date, user, message) VALUES('"+now_date+"', '"
+                        +nick+"', '"+msg+"')")
+            db.commit()
+            message = ctypes.windll.user32.MessageBoxW(None, '건의사항 전송성공!','success', 0)
+            db.close()
+        except:
+            message = ctypes.windll.user32.MessageBoxW(None, '건의사항 전송실패','success', 0)
     return render_template('message_send.html')
+    
 
 # 업로드
 @app.route('/upload')
@@ -72,9 +81,10 @@ def kakao_login():
 # 토큰
 @app.route('/oauth')
 def oatuh():
+    global user_code
     code = str(request.args.get('code'))
     url = "https://kauth.kakao.com/oauth/token"
-    payload = "grant_type=authorization_code&client_id=91d3b37e4651a9c3ab0216abfe877a50&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
+    payload = "grant_type=authorization_code&client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
     headers = {
         'Content-Type': "application/x-www-form-urlencoded",
         'Cache-Control': "no-cache",
@@ -91,6 +101,9 @@ def oatuh():
     url = "https://kapi.kakao.com/v2/user/me"
     response = requests.request("POST", url, headers=headers)
     print(response.text)
+    user_url = request.url
+    url_index = user_url.index('code=') + 5
+    user_code = user_url[url_index:]
     return (response.text)
     
 """                    구동 부분                      """
@@ -245,10 +258,6 @@ if __name__ == '__main__':
     # 동작 끝날때까지 기다리는법 -> TTS단에서 스레드로 플래그
     # 모션쪽에만 스레드
     
-    # css 5
-    
-    # 단어 서칭
-
 
     # 발표자료 전문화 -> 플로우차트나 db쪽 발표자료 검토
     # vscode를 발표때 이용
