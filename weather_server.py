@@ -20,6 +20,7 @@ from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
+pibo = Edu_Pibo()
 count = 0
 
 """                    템플릿 부분                    """
@@ -42,10 +43,9 @@ def render_message_send():
             cursor.execute("INSERT INTO faq(now_date, user, message) VALUES('"+now_date+"', '"
                         +nick+"', '"+msg+"')")
             db.commit()
-            message = ctypes.windll.user32.MessageBoxW(None, '건의사항 전송성공!','success', 0)
             db.close()
         except:
-            message = ctypes.windll.user32.MessageBoxW(None, '건의사항 전송실패','success', 0)
+            print('error')
     return render_template('message_send.html')
     
 
@@ -57,7 +57,7 @@ def render_file_uploade():
 # 다운로드
 @app.route('/download')
 def render_file_download():
-    files_list = os.listdir("./uploads")
+    files_list = os.listdir("/home/pi/weather_alarm/uploads")
     return render_template('download.html', files=files_list) #files라는 변수에 files_list를 담음
 
 # 목록
@@ -123,11 +123,9 @@ def upload_file():
     if request.method == 'POST':
         try:
             f = request.files['file']
-            f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
-            message = ctypes.windll.user32.MessageBoxW(None, '업로드 성공!','success', 0)
+            f.save('/home/pi/weather_alarm/uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
             return render_template('upload.html')
         except:
-            message = ctypes.windll.user32.MessageBoxW(None, '파일명을 확인해주세요!','error', 0)
             if message == 1:
                 print('ok')
             return render_template('upload.html')
@@ -135,17 +133,16 @@ def upload_file():
 # 파일 다운로드
 @app.route('/download', methods = ['GET', 'POST'])
 def download_file():
+    files_list = os.listdir("/home/pi/weather_alarm/uploads")
     if request.method == 'POST':
-        files_list = os.listdir("./uploads")
         try:
-            path = "./uploads/"        
+            path = os.path.join(os.path.expanduser('~'), 'downloads')
+            print(path)    
             send_file(path + request.form['file'],
-                    attachment_filename = request.form['file'],
-                    as_attachment=True) #파일을 경로에 저장하는데 파일 명은 request.form으로 받고 as_attachment인자 찾아보기
-            message = ctypes.windll.user32.MessageBoxW(None, '다운로드 성공!','success', 0)
+                    download_name = request.form['file'],
+                    as_attachment=True) 
             return render_template('download.html', files=files_list)
         except:
-            message = ctypes.windll.user32.MessageBoxW(None, '파일명을 확인해주세요!','error', 0)
             return render_template('download.html', files=files_list)
 
 # 파일 삭제
@@ -177,8 +174,8 @@ def weather_alarm():
     ctime, count = count_time()
     time = weather_db.nowtime()
     weather = now_weather(time)
-    today_time = weather_data.set_date()
-    return render_template('weather.html', data = weather, date = today_time, time = ctime, count = count)
+    # today_time = weather_data.set_date()
+    return render_template('weather.html', data = weather, date = time, time = ctime, count = count)
 
 def now_weather(time): # html로 각 구의 기상을 담고있는 리스트 안의 딕셔너리를 만들어주는 함수
     count = 0
@@ -222,9 +219,7 @@ def speak_to_user(): # Pibo가 user에게 날씨 말해줌
                 speech_tts.tts_test('카톡으로 보냈어')
                 pibo_reset()
             else:
-                pibo.eye_on('red')
-                speech_tts.tts_test('원하는 지역을 찾지 못했어')
-                sleep(2)
+                speech_tts.tts_test('카톡으로 보낼 지역을 찾지 못했어')
                 pibo_reset()
 
         else:
@@ -234,12 +229,11 @@ def speak_to_user(): # Pibo가 user에게 날씨 말해줌
                 speech_tts.tts_test(weather_now.weather_to_speak(local))
                 pibo_reset()
             else:
-                pibo.eye_on('red')
                 speech_tts.tts_test('원하는 지역을 찾지 못했어')
                 pibo_reset()
     except:
-        print("지역을 못 찾음")
-        speech_tts.tts_test('원하는 지역을 찾지 못했어')
+        print("문장 해석 오류")
+        speech_tts.tts_test('이해를 못하겠어')
         pibo_reset()
 
 def msg_device(msg): # 터치센서 감지하면 작동
@@ -247,15 +241,17 @@ def msg_device(msg): # 터치센서 감지하면 작동
     print(f'message : {msg}')
     check = msg.split(':')[1]
     if check.find('touch') > -1:
-        count +=1
+        count += 1
     if count > 1:
-        pibo.eye_on(160, 0, 0)
-        time.sleep(2)
+        pibo.eye_on('yellow')
+        time.sleep(10)
         t2 = threading.Thread(target=pibo_welcome, args=(3,))
         t2.daemon = True
         t2.start()
         speak_to_user()
         count = 0
+        pibo.eye_on('yellow')
+        time.sleep(3)
 
 def device_thread_test(): # pibo 쓰레드
     ret = pibo.start_devices(msg_device)
@@ -271,15 +267,20 @@ def pibo_welcome(num):
     pibo.set_motion('welcome', num)
 
 if __name__ == '__main__': 
-    pibo = Edu_Pibo()
     pibo_reset()
-    # speech_tts.tts_test('서버를 실행할게')
+    speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
     device_thread_test()
 
-    app.run(debug = False, port = 8000)
-    # app.run(host = '0.0.0.0', debug = False, port = 8000)
+    # app.run(debug = False, port = 8000)
+    app.run(host = '0.0.0.0', debug = False, port = 8000)
 
+    # url 접속 후 url 따기
+    # 확인 창 뜨게하기
+    # 파일 다운로드 경로 지정
+
+    # html을 파이보와 연계되게 날씨 누르면 파이보에서 대답
+    # 친구들에게 카톡 알림
 
 
     # 왜 눈이 제대로 안켜질까

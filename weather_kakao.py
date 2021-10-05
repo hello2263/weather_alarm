@@ -75,7 +75,7 @@ def kakao_friends_send(weather_message):
     headers={"Authorization" : "Bearer " + tokens["access_token"]}
     result = json.loads(requests.get(friend_url, headers=headers).text)
     friends_list = result.get("elements")
-    # print(friends_list)
+    print(friends_list)
     try:
         friend_id = friends_list[0].get("uuid")
         send_url= "https://kapi.kakao.com/v1/api/talk/friends/message/default/send"
@@ -99,12 +99,12 @@ def kakao_friends_send(weather_message):
 
 if __name__=='__main__':
     # kakao_get_code()
-    # kakao_get_tokens('me', '0a8a356679801891a01bdc324ec32d77', 'https://127.0.0.1:8000/oauth', 'oaY_bYPELjXO4OYYe0IXpMhrG-csV7xBE9_NcyKlbh_yofsMUrY17r-_NoKBPe2xB8TCHgopyNgAAAF8Sh-SMA')
+    # kakao_get_tokens('me', '0a8a356679801891a01bdc324ec32d77', 'https://127.0.0.1:8000/oauth', 'ADht31kbxUvBs48Gm2PCQf8uiKOmhHtX3rEmvnEEP5rtPNFUOlK5Om9rRWfZTFzGPCeFMQo9dJcAAAF8TquA7w')
     # kakao_get_tokens('friends', '91d3b37e4651a9c3ab0216abfe877a50', 'https://127.0.0.1:8000/oauth', 'NJWysaUI0qJ0I6gqWD5QEfQyLkgykTXi8HZETyS2BEckFBLWjxzGE_PFxyf_ZuAKBLj98Ao9c-wAAAF8SjhAYA')
     local, x, y = weather_local.find_user_location()
     weather = weather_now.send_data_user(local, x, y)
     # kakao_me_send(weather)
-    kakao_friends_send(weather)
+    # kakao_friends_send(weather)
 
 
 
