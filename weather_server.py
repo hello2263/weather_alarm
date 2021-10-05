@@ -6,20 +6,21 @@ from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from bs4 import BeautifulSoup
-from lib import weather_db, weather_local
+# from lib import weather_db, weather_local
 import json, requests
-# from lib import weather_db, weather_local, speech_tts, speech_stt
-import werkzeug, os, sys, time, weather_data, weather_now, ctypes, weather_kakao
+from lib import weather_db, weather_local, speech_tts, speech_stt
+import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao
 global db, cursor
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
 
 sys.path.append(cfg.OPENPIBO_PATH + '/edu')
-# from pibo import Edu_Pibo
+from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
+count = 0
 
 """                    템플릿 부분                    """
 # 홈
@@ -213,62 +214,75 @@ def speak_to_user(): # Pibo가 user에게 날씨 말해줌
     sentence = ret['data']
     local = weather_local.find_speak_local(sentence)
     x, y = weather_local.find_speak_location(local)
-    if ('카톡' or '보내') in sentence:
-        if (x and y) != 0:
-            weather = weather_now.send_data_user(local, x, y)
-            weather_kakao.kakao_me_send(weather)
-            speech_tts.tts_test('카톡으로 보냈어')
-            pibo_reset()
-        else:
-            pibo.eye_on('red')
-            speech_tts.tts_test('원하는 지역을 찾지 못했어')
-            pibo_reset()
+    try:
+        if ('카톡' in sentence) or ('보내' in sentence):
+            if (x and y) != 0:
+                weather = weather_now.send_data_user(local, x, y)
+                weather_kakao.kakao_me_send(weather)
+                speech_tts.tts_test('카톡으로 보냈어')
+                pibo_reset()
+            else:
+                pibo.eye_on('red')
+                speech_tts.tts_test('원하는 지역을 찾지 못했어')
+                sleep(2)
+                pibo_reset()
 
-    else:
-        if (x and y) != 0:
-            weather_now.send_data_user(local, x, y)
-            speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
-            speech_tts.tts_test(weather_now.weather_to_speak(local))
-            pibo_reset()
         else:
-            pibo.eye_on('red')
-            speech_tts.tts_test('원하는 지역을 찾지 못했어')
-            pibo_reset()
+            if (x and y) != 0:
+                weather_now.send_data_user(local, x, y)
+                speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
+                speech_tts.tts_test(weather_now.weather_to_speak(local))
+                pibo_reset()
+            else:
+                pibo.eye_on('red')
+                speech_tts.tts_test('원하는 지역을 찾지 못했어')
+                pibo_reset()
+    except:
+        print("지역을 못 찾음")
+        speech_tts.tts_test('원하는 지역을 찾지 못했어')
+        pibo_reset()
 
 def msg_device(msg): # 터치센서 감지하면 작동
     global count # 중요
-    pibo.set_motion('stop', 1)
     print(f'message : {msg}')
     check = msg.split(':')[1]
     if check.find('touch') > -1:
         count +=1
     if count > 1:
-        pibo.eye_on('purple')
-        pibo.set_motion('welcome', 3)
+        pibo.eye_on(160, 0, 0)
+        time.sleep(2)
+        t2 = threading.Thread(target=pibo_welcome, args=(3,))
+        t2.daemon = True
+        t2.start()
         speak_to_user()
         count = 0
 
-def device_thread_test(): # 쓰레드
+def device_thread_test(): # pibo 쓰레드
     ret = pibo.start_devices(msg_device)
 
 def pibo_reset(): # 초기화
     pibo.eye_on('aqua')
-    pibo.set_motion('stop', 1)
+    pibo.set_motion('stop', 2)
+
+def pibo_eye(color):
+    pibo.eye_on(color)
+
+def pibo_welcome(num):
+    pibo.set_motion('welcome', num)
 
 if __name__ == '__main__': 
-    # pibo = Edu_Pibo()
-    # pibo_reset()
+    pibo = Edu_Pibo()
+    pibo_reset()
     # speech_tts.tts_test('서버를 실행할게')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
-    # device_thread_test()
+    device_thread_test()
 
     app.run(debug = False, port = 8000)
     # app.run(host = '0.0.0.0', debug = False, port = 8000)
 
 
 
-    # 동작 끝날때까지 기다리는법 -> TTS단에서 스레드로 플래그
-    # 모션쪽에만 스레드
+    # 왜 눈이 제대로 안켜질까
     
 
     # 발표자료 전문화 -> 플로우차트나 db쪽 발표자료 검토
