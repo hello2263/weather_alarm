@@ -6,21 +6,21 @@ from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from bs4 import BeautifulSoup
-# from lib import weather_db, weather_local
-import json, requests
-from lib import weather_db, weather_local, speech_tts, speech_stt
-import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao
+from lib import weather_db, weather_local
+import pyautogui as pg
+# from lib import weather_db, weather_local, speech_tts, speech_stt
+import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao, json, requests
 global db, cursor
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
 
 sys.path.append(cfg.OPENPIBO_PATH + '/edu')
-from pibo import Edu_Pibo
+# from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
-pibo = Edu_Pibo()
+# pibo = Edu_Pibo()
 count = 0
 
 """                    템플릿 부분                    """
@@ -57,7 +57,7 @@ def render_file_uploade():
 # 다운로드
 @app.route('/download')
 def render_file_download():
-    files_list = os.listdir("/home/pi/weather_alarm/uploads")
+    files_list = os.listdir("./uploads")
     return render_template('download.html', files=files_list) #files라는 변수에 files_list를 담음
 
 # 목록
@@ -123,43 +123,46 @@ def upload_file():
     if request.method == 'POST':
         try:
             f = request.files['file']
-            f.save('/home/pi/weather_alarm/uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
+            f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
+            pg.alert(text='업로드 성공', title='결과', button='OK')
             return render_template('upload.html')
         except:
-            if message == 1:
-                print('ok')
+            pg.alert(text='업로드에 실패했습니다', title='결과', button='OK')
             return render_template('upload.html')
 
 # 파일 다운로드
 @app.route('/download', methods = ['GET', 'POST'])
 def download_file():
-    files_list = os.listdir("/home/pi/weather_alarm/uploads")
+    files_list = os.listdir("./uploads")
     if request.method == 'POST':
         try:
-            path = os.path.join(os.path.expanduser('~'), 'downloads')
+            # path = os.path.expanduser('~')
+            path = "./uploads/"
+            # path = os.path.join(os.path.expanduser('~'), 'Downloads')
             print(path)    
             send_file(path + request.form['file'],
-                    download_name = request.form['file'],
+                    attachment_filename = request.form['file'],
                     as_attachment=True) 
+            pg.alert(text='다운로드 성공', title='결과', button='OK')
             return render_template('download.html', files=files_list)
         except:
+            pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
             return render_template('download.html', files=files_list)
 
 # 파일 삭제
 @app.route('/delete', methods = ['POST'])
 def delete_file():
+    files_list = os.listdir("./uploads")
     if request.method == 'POST':
-        files_list = os.listdir("./uploads")
         try:
             path = "./uploads/"
             os.remove(path+"{}".format(request.form['file']))
-            message = ctypes.windll.user32.MessageBoxW(None, '삭제 성공!','success', 0)
+            pg.alert(text='삭제됐습니다', title='결과', button='OK')
+            files_list = os.listdir("./uploads")
             return render_template('delete.html', files=files_list)
         except:
-                message = ctypes.windll.user32.MessageBoxW(None, '파일명을 확인해주세요!','error', 0)
-                if message == 1:
-                    print('ok')
-                return render_template('delete.html', files=files_list)
+            pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
+            return render_template('delete.html', files=files_list)
 
 # 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
@@ -267,10 +270,10 @@ def pibo_welcome(num):
     pibo.set_motion('welcome', num)
 
 if __name__ == '__main__': 
-    pibo_reset()
-    speech_tts.tts_test('서버를 실행하겠습니다.')
+    # pibo_reset()
+    # speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
-    device_thread_test()
+    # device_thread_test()
 
     # app.run(debug = False, port = 8000)
     app.run(host = '0.0.0.0', debug = False, port = 8000)
@@ -279,7 +282,6 @@ if __name__ == '__main__':
     # html을 파이보와 연계되게 날씨 누르면 파이보에서 대답 <- 질문
     # 왜 눈이 제대로 안켜질까 <- 질문
 
-    # 확인 창 뜨게하기
     # 파일 다운로드 경로 지정
 
     # 친구들에게 카톡 알림
