@@ -2,6 +2,7 @@
 # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.save.html -werkzeug 공식문서
 from urllib.request import Request, urlopen
 from flask import Flask, jsonify, render_template, request, send_file
+from flask.helpers import send_from_directory
 from flask_restful import Resource, Api, reqparse
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -108,6 +109,16 @@ def oatuh():
     print(user_code)
     # return (response.text)
 
+@app.route('/check', methods = ['POST', 'GET'])
+def kakao_check():
+    if request.method == 'POST':
+        code = request.form['code']
+        print(code)
+        weather_kakao.kakao_get_tokens('friends', '91d3b37e4651a9c3ab0216abfe877a50', 'https://192.168.0.19:8000/kakao', code)
+        user = weather_kakao.kakao_user_check()
+        return render_template('check.html', user = user)
+    else:
+        return render_template('check.html')
 
     
 """                    구동 부분                      """
@@ -137,12 +148,13 @@ def download_file():
     if request.method == 'POST':
         try:
             # path = os.path.expanduser('~')
-            path = "./uploads/"
-            # path = os.path.join(os.path.expanduser('~'), 'Downloads')
+            # path = "./uploads/"
+            path = os.path.join(os.path.expanduser('~'), 'Downloads')
             print(path)    
-            send_file(path + request.form['file'],
-                    attachment_filename = request.form['file'],
-                    as_attachment=True) 
+            send_from_directory(directory=path, filename=request.form['file'])
+            # send_file(path + request.form['file'],
+            #         attachment_filename = request.form['file'],
+            #         as_attachment=True) 
             pg.alert(text='다운로드 성공', title='결과', button='OK')
             return render_template('download.html', files=files_list)
         except:

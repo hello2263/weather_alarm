@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<title>파일 다운로드</title>
+	</head>
+	<body>
+		<center>
+			<a href="/">
+				<div style="color: rgb(175, 184, 178); font-size: 5em; font-weight: bold;">
+				Dogyu's Server
+				</div>
+			</a>
+			<br><br>
+		</center>
+	</body>
+	<style>
+		a{
+			text-decoration-line: none;
+		}
+		html,body{
+			height:100%;
+		}
+		body{
+			background-color: rgba(15, 15, 15, 0.781);
+		}
+		body:before{
+			content:'';
+			display:inline-block;
+		}
+		input{
+			background:#00000000;
+			color:rgb(175, 184, 178);
+			border:none;
+			position:relative;
+			height:60px;
+			font-size:1.6em;
+			padding:0 2em;
+			cursor:pointer;
+			transition:800ms ease all;
+			outline:none;
+		}
+		#sub:hover{
+			background:rgba(5, 5, 5, 0.479);
+		}
+		#sub:before,
+		#sub:after{
+			content:'';
+			position:absolute;
+			top:0;
+			right:0;
+			height:2px;
+			width:0;
+			background: #deff24;
+			transition:400ms ease all;
+		}
+		#sub:after{
+			right:inherit;
+			top:inherit;
+			left:0;
+			bottom:0;
+		}
+		#sub:hover:before,
+		#sub:hover:after{
+			width:100%;
+			transition:800ms ease all;
+		}
+	</style>
+	<body>
+		<br><br><br><br>
+		<center>
+			<form action = "/check" method = "POST" enctype = "multipart/form-data">
+				<input type = "text" name = "code" style="background-color: white;" /><br><br><br><br>
+				<div id = "sub" >
+					<input type = "submit" value="체크"/>
+				</div>
+			</form>
+
+			{{user}}
+		</center>
+	</body>
+</html>
+ 

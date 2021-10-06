@@ -9,15 +9,12 @@ import selenium
 from selenium import webdriver
 
 def kakao_get_code():
-    URL = "https://kauth.kakao.com/oauth/authorize?client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=https://127.0.0.1:8000/oauth&response_type=code"
+    URL = "https://kauth.kakao.com/oauth/authorize?client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=https://192.168.0.19:8000/kakao&response_type=code"
     webbrowser.open(URL)
     # driver=webdriver.Chrome('D:/chromedriver.exe')
     # print(driver.current_url)
     # user_url = request.url
     # url_index = user_url.index('code=') + 5
-
-    
-    
 
 def kakao_get_tokens(path, api, redirect_uri, code):
     url = 'https://kauth.kakao.com/oauth/token'
@@ -41,6 +38,24 @@ def set_message(weather_message):
         message += str(key)
         message += ': '+str(value)+ '\n'
     return message
+
+def kakao_token_check():
+    with open("kakao_code_friends.json","r") as fp:
+        tokens = json.load(fp)
+    url="https://kapi.kakao.com/v1/user/access_token_info"
+    headers={"Authorization" : "Bearer " + tokens["access_token"]}
+    response = requests.post(url, headers=headers)
+    print(response.text)
+    return response.text
+    
+def kakao_user_check():
+    with open("kakao_code_friends.json","r") as fp:
+        tokens = json.load(fp)
+    url="https://kapi.kakao.com/v2/user/me"
+    headers={"Authorization" : "Bearer " + tokens["access_token"]}
+    response = requests.post(url, headers=headers)
+    print(response.text)
+    return response.text
 
 def kakao_me_send(weather_message):
     with open("kakao_code_me.json","r") as fp:
@@ -99,10 +114,11 @@ def kakao_friends_send(weather_message):
 
 if __name__=='__main__':
     # kakao_get_code()
-    # kakao_get_tokens('me', '0a8a356679801891a01bdc324ec32d77', 'https://127.0.0.1:8000/oauth', 'ADht31kbxUvBs48Gm2PCQf8uiKOmhHtX3rEmvnEEP5rtPNFUOlK5Om9rRWfZTFzGPCeFMQo9dJcAAAF8TquA7w')
-    # kakao_get_tokens('friends', '91d3b37e4651a9c3ab0216abfe877a50', 'https://127.0.0.1:8000/oauth', 'NJWysaUI0qJ0I6gqWD5QEfQyLkgykTXi8HZETyS2BEckFBLWjxzGE_PFxyf_ZuAKBLj98Ao9c-wAAAF8SjhAYA')
-    local, x, y = weather_local.find_user_location()
-    weather = weather_now.send_data_user(local, x, y)
+    # kakao_get_tokens('me', '0a8a356679801891a01bdc324ec32d77', 'https://example.com/oauth', 'ADht31kbxUvBs48Gm2PCQf8uiKOmhHtX3rEmvnEEP5rtPNFUOlK5Om9rRWfZTFzGPCeFMQo9dJcAAAF8TquA7w')
+    # kakao_get_tokens('friends', '91d3b37e4651a9c3ab0216abfe877a50', 'https://example.com/oauth', code)
+    # local, x, y = weather_local.find_user_location()
+    # weather = weather_now.send_data_user(local, x, y)
+    kakao_user_check()
     # kakao_me_send(weather)
     # kakao_friends_send(weather)
 
