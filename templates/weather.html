@@ -41,8 +41,10 @@
 
 	<body>
 		<div style='position: absolute'>
+
 			<img height="800px" width="1200px" src="{{ url_for('static', filename='./map.jpg') }}"/><br>
 			<!-- 강남구 -->
+			<a href ='/'>
 			<div style="left: 750px; bottom:160px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
 				{{data[0]['tmp']}}도/{{data[0]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[0]['sky'] == 'sunny' %}
@@ -54,6 +56,7 @@
 				{% endif %}
 				
 			</div>
+			</a>
 			<!-- 강동구 -->
 			<div style="left: 990px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
 				{{data[1]['tmp']}}도/{{data[1]['rain']}}%<br>&nbsp;&nbsp;

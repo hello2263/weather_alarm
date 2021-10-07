@@ -8,8 +8,8 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from bs4 import BeautifulSoup
 from lib import weather_db, weather_local
-import pyautogui as pg
-# from lib import weather_db, weather_local, speech_tts, speech_stt
+# import pyautogui as pg
+from lib import weather_db, weather_local, speech_tts, speech_stt
 import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao, json, requests
 global db, cursor
 
@@ -17,11 +17,11 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
 
 sys.path.append(cfg.OPENPIBO_PATH + '/edu')
-# from pibo import Edu_Pibo
+from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
-# pibo = Edu_Pibo()
+pibo = Edu_Pibo()
 count = 0
 
 """                    템플릿 부분                    """
@@ -80,10 +80,19 @@ def render_file_delete():
 def kakao_login():
     return render_template('kakao.html')
 
+@app.route('/kakao_me')
+def kakao_me_login():
+    return render_template('kakao_me.html')
+
+@app.route('/kakao_friends')
+def kakao_friends_login():
+    return render_template('kakao_friends.html')
+
 # 토큰
-@app.route('/oauth')
-def oatuh():
-    global user_code
+@app.route('/kakao/oauth?code=<code>')
+def oatuh(code):
+    print(code)
+    # global user_code
     # code = str(request.args.get('code'))
     # url = "https://kauth.kakao.com/oauth/token"
     # payload = "grant_type=authorization_code&client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
@@ -103,22 +112,46 @@ def oatuh():
     # url = "https://kapi.kakao.com/v2/user/me"
     # response = requests.request("POST", url, headers=headers)
     # print(response.text)
-    user_url = request.url
-    url_index = user_url.index('code=') + 5
-    user_code = user_url[url_index:]
-    print(user_code)
-    # return (response.text)
+    return render_template('kakao.html')
 
-@app.route('/check', methods = ['POST', 'GET'])
-def kakao_check():
+@app.route('/check_me', methods = ['POST', 'GET'])
+def kakao_check_me():
     if request.method == 'POST':
         code = request.form['code']
         print(code)
-        weather_kakao.kakao_get_tokens('friends', '91d3b37e4651a9c3ab0216abfe877a50', 'https://192.168.0.19:8000/kakao', code)
-        user = weather_kakao.kakao_user_check()
-        return render_template('check.html', user = user)
+        weather_kakao.kakao_to_me_get_tokens(code)
+        weather_kakao.kakao_me_token()
+        user = weather_kakao.kakao_me_check()
+        return render_template('check_me.html', user = user)
     else:
-        return render_template('check.html')
+        return render_template('check_me.html')
+
+@app.route('/check_owner', methods = ['POST', 'GET'])
+def kakao_check_owner():
+    if request.method == 'POST':
+        code = request.form['code']
+        print(code)
+        weather_kakao.kakao_to_friends_get_mytokens(code)
+        weather_kakao.kakao_owner_token()
+        user = weather_kakao.kakao_owner_check()
+        return render_template('check_owner.html', user = user)
+    else:
+        return render_template('check_owner.html')
+
+
+@app.route('/check_friend', methods = ['POST', 'GET'])
+def kakao_check_friend():
+    if request.method == 'POST':
+        code = request.form['code']
+        print(code)
+        weather_kakao.kakao_to_friends_get_friendstokens(code)
+        weather_kakao.kakao_friends_token()
+        user = weather_kakao.kakao_friends_check()
+        return render_template('check_friend.html', user = user)
+    else:
+        return render_template('check_friend.html')
+
+
 
     
 """                    구동 부분                      """
@@ -135,10 +168,10 @@ def upload_file():
         try:
             f = request.files['file']
             f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
-            pg.alert(text='업로드 성공', title='결과', button='OK')
+            # pg.alert(text='업로드 성공', title='결과', button='OK')
             return render_template('upload.html')
         except:
-            pg.alert(text='업로드에 실패했습니다', title='결과', button='OK')
+            # pg.alert(text='업로드에 실패했습니다', title='결과', button='OK')
             return render_template('upload.html')
 
 # 파일 다운로드
@@ -148,17 +181,17 @@ def download_file():
     if request.method == 'POST':
         try:
             # path = os.path.expanduser('~')
-            # path = "./uploads/"
-            path = os.path.join(os.path.expanduser('~'), 'Downloads')
+            path = "./uploads/"
+            # path = os.path.join(os.path.expanduser('~'), 'Downloads')
             print(path)    
             send_from_directory(directory=path, filename=request.form['file'])
             # send_file(path + request.form['file'],
             #         attachment_filename = request.form['file'],
             #         as_attachment=True) 
-            pg.alert(text='다운로드 성공', title='결과', button='OK')
+            # pg.alert(text='다운로드 성공', title='결과', button='OK')
             return render_template('download.html', files=files_list)
         except:
-            pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
+            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
             return render_template('download.html', files=files_list)
 
 # 파일 삭제
@@ -169,11 +202,11 @@ def delete_file():
         try:
             path = "./uploads/"
             os.remove(path+"{}".format(request.form['file']))
-            pg.alert(text='삭제됐습니다', title='결과', button='OK')
+            # pg.alert(text='삭제됐습니다', title='결과', button='OK')
             files_list = os.listdir("./uploads")
             return render_template('delete.html', files=files_list)
         except:
-            pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
+            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
             return render_template('delete.html', files=files_list)
 
 # 유저의 날짜선택
@@ -229,10 +262,20 @@ def speak_to_user(): # Pibo가 user에게 날씨 말해줌
     try:
         if ('카톡' in sentence) or ('보내' in sentence):
             if (x and y) != 0:
-                weather = weather_now.send_data_user(local, x, y)
-                weather_kakao.kakao_me_send(weather)
-                speech_tts.tts_test('카톡으로 보냈어')
-                pibo_reset()
+                speech_tts.tts_test('누구한테 보낼까요?')
+                ret = speech_stt.stt_test()
+                sentence = ret['data']
+                try:
+                    weather = weather_now.send_data_user(local, x, y)
+                    weather_kakao.kakao_friends_send(weather, sentence)
+                    speech_tts.tts_test(sentence+'에게 카톡으로 보냈어')
+                    pibo_reset()
+
+                except:
+                    weather = weather_now.send_data_user(local, x, y)
+                    weather_kakao.kakao_me_send(weather)
+                    speech_tts.tts_test('친구목록에 없어서 너에게 카톡으로 보냈어')
+                    pibo_reset()
             else:
                 speech_tts.tts_test('카톡으로 보낼 지역을 찾지 못했어')
                 pibo_reset()
@@ -255,17 +298,19 @@ def msg_device(msg): # 터치센서 감지하면 작동
     global count # 중요
     print(f'message : {msg}')
     check = msg.split(':')[1]
+
     if check.find('touch') > -1:
+
         count += 1
     if count > 1:
+        pibo.eye_on('yellow')  
         pibo.eye_on('yellow')
-        time.sleep(10)
         t2 = threading.Thread(target=pibo_welcome, args=(3,))
         t2.daemon = True
         t2.start()
         speak_to_user()
         count = 0
-        pibo.eye_on('yellow')
+        #pibo.eye_on('yellow')
         time.sleep(3)
 
 def device_thread_test(): # pibo 쓰레드
@@ -282,19 +327,19 @@ def pibo_welcome(num):
     pibo.set_motion('welcome', num)
 
 if __name__ == '__main__': 
-    # pibo_reset()
+    pibo_reset()
     # speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
-    # device_thread_test()
+    device_thread_test()
 
     # app.run(debug = False, port = 8000)
     app.run(host = '0.0.0.0', debug = False, port = 8000)
 
-    # url 접속 후 url 따기 <- 질문
-    # html을 파이보와 연계되게 날씨 누르면 파이보에서 대답 <- 질문
+    # html을 파이보와 연계되게 날씨 누르면 파이보에서 대답 
+
+
     # 왜 눈이 제대로 안켜질까 <- 질문
+    # 파일 다운로드 경로 지정 
 
-    # 파일 다운로드 경로 지정
-
-    # 친구들에게 카톡 알림
+    
 
