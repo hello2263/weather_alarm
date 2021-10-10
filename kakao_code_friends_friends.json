@@ -1,1 +1,1 @@
-{"access_token": "BJ6WOrpxLWUGjrwkL85JBAv6TERdxiuVpVvA-wopyV8AAAF8WS6gKQ", "token_type": "bearer", "refresh_token": "K5m4VznbrknWSh3vdFYOSfJEZy4iSjK_k4dwvwopyV8AAAF8WS6gJw", "expires_in": 21599, "scope": "account_email profile_image talk_message profile_nickname friends", "refresh_token_expires_in": 5183999}
+{"access_token": "CwMDeVMMDGho3H-2n7hQ_P9zkvjQlGSRHND5Ego9dJkAAAF8aEDJ_w", "token_type": "bearer", "refresh_token": "rZHa6pJKxFIJjvQBsg1hXHr3zFiAY_uj_7XfmQo9dJkAAAF8aEDJ_g", "expires_in": 21599, "scope": "friends talk_message", "refresh_token_expires_in": 5183999}

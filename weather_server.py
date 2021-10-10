@@ -180,17 +180,16 @@ def upload_file():
 def download_file():
     files_list = os.listdir("./uploads")
     if request.method == 'POST':
+        sw = 0
+        for x in files_list:
+            if(x==request.form['file']):
+                sw=1
         try:
-            # path = os.path.expanduser('~')
             path = "./uploads/"
-            # path = os.path.join(os.path.expanduser('~'), 'Downloads')
-            print(path)    
-            send_from_directory(directory=path, filename=request.form['file'])
-            # send_file(path + request.form['file'],
-            #         attachment_filename = request.form['file'],
-            #         as_attachment=True) 
             # pg.alert(text='다운로드 성공', title='결과', button='OK')
-            return render_template('download.html', files=files_list)
+            return send_file(path + request.form['file'],
+                    attachment_filename = request.form['file'],
+                    as_attachment=True) 
         except:
             # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
             return render_template('download.html', files=files_list)
@@ -304,14 +303,11 @@ def msg_device(msg): # 터치센서 감지하면 작동
 
         count += 1
     if count > 1:
-        pibo.eye_on('yellow')  
-        pibo.eye_on('yellow')
         t2 = threading.Thread(target=pibo_welcome, args=(3,))
         t2.daemon = True
         t2.start()
         speak_to_user()
         count = 0
-        #pibo.eye_on('yellow')
         time.sleep(3)
 
 def device_thread_test(): # pibo 쓰레드
@@ -338,9 +334,6 @@ if __name__ == '__main__':
 
     # html을 파이보와 연계되게 날씨 누르면 파이보에서 대답 
 
-
-    # 왜 눈이 제대로 안켜질까 <- 질문
-    # 파일 다운로드 경로 지정 
 
     
 
