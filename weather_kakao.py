@@ -179,6 +179,7 @@ def kakao_friends_send(weather_message, friend):
         response = requests.post(send_url, headers=headers, data=data)
         response.status_code
         print('kakao to friend sended')
+        
     except:
         print('kakao token check')
     
@@ -199,13 +200,15 @@ def kakao_friends_read():
         db.commit()
         print(friend['profile_nickname']+"success")
     db.close()
+
 if __name__=='__main__':
-    local, x, y = weather_local.find_user_location()
-    weather = weather_now.send_data_user(local, x, y)
+    # local, x, y = weather_local.find_user_location()
+    # weather = weather_now.send_data_user(local, x, y)
     # kakao_user_check()
-    # kakao_friends_read()
+    kakao_friends_read()
     # kakao_me_send(weather)
     # kakao_friends_send(weather, 'ghkdtjsgml')
+
 
 
 

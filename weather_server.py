@@ -119,7 +119,7 @@ def kakao_check_me():
     if request.method == 'POST':
         code = request.form['code']
         print(code)
-        weather_kakao.kakao_to_me_get_tokens(code)
+        weather_kakao.kakao_to_me_get_mytokens(code)
         weather_kakao.kakao_me_token()
         user = weather_kakao.kakao_me_check()
         return render_template('check_me.html', user = user)
@@ -134,6 +134,7 @@ def kakao_check_owner():
         weather_kakao.kakao_to_friends_get_mytokens(code)
         weather_kakao.kakao_owner_token()
         user = weather_kakao.kakao_owner_check()
+        weather_kakao.kakao_friends_read()
         return render_template('check_owner.html', user = user)
     else:
         return render_template('check_owner.html')
@@ -254,45 +255,45 @@ def count_time(): # html에서 콤보박스에 표시될 날짜들 정하는 함
     return count_date, count
 
 def speak_to_user(): # Pibo가 user에게 날씨 말해줌
-    speech_tts.tts_test('날씨와 관련해서 무엇을 도와줄까?')
+    speech_tts.tts_test('날씨와 관련해서 무엇을 도와드릴까요?')
     ret = speech_stt.stt_test()
     sentence = ret['data']
     local = weather_local.find_speak_local(sentence)
     x, y = weather_local.find_speak_location(local)
-    try:
-        if ('카톡' in sentence) or ('보내' in sentence):
-            if (x and y) != 0:
-                speech_tts.tts_test('누구한테 보낼까요?')
-                ret = speech_stt.stt_test()
-                sentence = ret['data']
-                try:
-                    weather = weather_now.send_data_user(local, x, y)
-                    weather_kakao.kakao_friends_send(weather, sentence)
-                    speech_tts.tts_test(sentence+'에게 카톡으로 보냈어')
-                    pibo_reset()
 
-                except:
-                    weather = weather_now.send_data_user(local, x, y)
-                    weather_kakao.kakao_me_send(weather)
-                    speech_tts.tts_test('친구목록에 없어서 너에게 카톡으로 보냈어')
-                    pibo_reset()
-            else:
-                speech_tts.tts_test('카톡으로 보낼 지역을 찾지 못했어')
+    if ('카톡' in sentence) or ('보내' in sentence):
+        if (x and y) != 0:
+            speech_tts.tts_test('누구한테 보낼까요?')
+            ret = speech_stt.stt_test()
+            sentence = ret['data']
+
+            if  ('황도규' in sentence) or ('나' in sentence):
+                weather = weather_now.send_data_user(local, x, y)
+                weather_kakao.kakao_me_send(weather)
+                speech_tts.tts_test('나한테 카톡으로 보냈어')
                 pibo_reset()
 
+            else:
+                weather = weather_now.send_data_user(local, x, y)
+                weather_kakao.kakao_friends_send(weather, sentence)
+                speech_tts.tts_test(sentence+'에게 카톡으로 보냈어')
+                pibo_reset()
+
+            
         else:
-            if (x and y) != 0:
-                weather_now.send_data_user(local, x, y)
-                speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
-                speech_tts.tts_test(weather_now.weather_to_speak(local))
-                pibo_reset()
-            else:
-                speech_tts.tts_test('원하는 지역을 찾지 못했어')
-                pibo_reset()
-    except:
-        print("문장 해석 오류")
-        speech_tts.tts_test('이해를 못하겠어')
-        pibo_reset()
+            speech_tts.tts_test('카톡으로 보낼 지역을 찾지 못했어')
+            pibo_reset()
+
+    else:
+        if (x and y) != 0:
+            weather_now.send_data_user(local, x, y)
+            speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
+            speech_tts.tts_test(weather_now.weather_to_speak(local))
+            pibo_reset()
+        else:
+            speech_tts.tts_test('원하는 지역을 찾지 못했어')
+            pibo_reset()
+
 
 def msg_device(msg): # 터치센서 감지하면 작동
     global count # 중요
@@ -328,7 +329,7 @@ def pibo_welcome(num):
 
 if __name__ == '__main__': 
     pibo_reset()
-    # speech_tts.tts_test('서버를 실행하겠습니다.')
+    speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
     device_thread_test()
 
