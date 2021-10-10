@@ -45,35 +45,64 @@ def render_message_send():
                         +nick+"', '"+msg+"')")
             db.commit()
             db.close()
+            return render_template('message_send.html')
         except:
             print('error')
-    return render_template('message_send.html')
-    
+            return render_template('message_send.html')
+    else:
+        return render_template('message_send.html')
 
-# 업로드
-@app.route('/upload')
-def render_file_uploade():
-    return render_template('upload.html')
+# 파일 업로드
+@app.route('/upload', methods = ['POST', 'GET'])
+def upload_file():
+    if request.method == 'POST':
+        try:
+            f = request.files['file']
+            f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
+            # pg.alert(text='업로드 성공', title='결과', button='OK')
+            return render_template('upload.html')
+        except:
+            # pg.alert(text='업로드에 실패했습니다', title='결과', button='OK')
+            return render_template('upload.html')
+    else:
+        return render_template('upload.html')
 
-# 다운로드
-@app.route('/download')
-def render_file_download():
+# 파일 다운로드
+@app.route('/download', methods = ['GET', 'POST'])
+def download_file():
     files_list = os.listdir("./uploads")
-    return render_template('download.html', files=files_list) #files라는 변수에 files_list를 담음
+    if request.method == 'POST':
+        sw = 0
+        for x in files_list:
+            if(x==request.form['file']):
+                sw=1
+        try:
+            path = "./uploads/"
+            # pg.alert(text='다운로드 성공', title='결과', button='OK')
+            return send_file(path + request.form['file'],
+                    download_name = request.form['file'],
+                    as_attachment=True)
+        except:
+            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
+            print("download error")
+    return render_template('download.html', files=files_list)
 
-# 목록
-# @app.route('/list')
-# def render_file_list(): # 따로 list.html을 만들지 않고 list를 표시하게 하는 방법
-#     file_list = os.listdir("./uploads")
-#     html = """<a href="/">홈</a><br><br>"""
-#     html += "file_list: {}".format(file_list)
-#     return html
-
-# 삭제
-@app.route('/delete')
-def render_file_delete():
+# 파일 삭제
+@app.route('/delete', methods = ['GET', 'POST'])
+def delete_file():
     files_list = os.listdir("./uploads")
-    return render_template('delete.html', files=files_list)
+    if request.method == 'POST':
+        try:
+            path = "./uploads/"
+            os.remove(path+"{}".format(request.form['file']))
+            # pg.alert(text='삭제됐습니다', title='결과', button='OK')
+            files_list = os.listdir("./uploads")
+            return render_template('delete.html', files=files_list)
+        except:
+            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
+            return render_template('delete.html', files=files_list)
+    else:
+        return render_template('delete.html', files=files_list)
 
 # 카카오
 @app.route('/kakao')
@@ -151,63 +180,6 @@ def kakao_check_friend():
         return render_template('check_friend.html', user = user)
     else:
         return render_template('check_friend.html')
-
-
-
-    
-"""                    구동 부분                      """
-# 메세지 받기
-@app.route('/message_receive', methods = ['POST']) 
-def message_receive():
-    value = request.form['message'] # 일반적으로 form태그를 이용하여 POST 방식으로 전달받을 때 주로 사용
-    return render_template('message_receive.html', data = value)
-
-# 파일 업로드
-@app.route('/upload', methods = ['POST', 'GET'])
-def upload_file():
-    if request.method == 'POST':
-        try:
-            f = request.files['file']
-            f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
-            # pg.alert(text='업로드 성공', title='결과', button='OK')
-            return render_template('upload.html')
-        except:
-            # pg.alert(text='업로드에 실패했습니다', title='결과', button='OK')
-            return render_template('upload.html')
-
-# 파일 다운로드
-@app.route('/download', methods = ['GET', 'POST'])
-def download_file():
-    files_list = os.listdir("./uploads")
-    if request.method == 'POST':
-        sw = 0
-        for x in files_list:
-            if(x==request.form['file']):
-                sw=1
-        try:
-            path = "./uploads/"
-            # pg.alert(text='다운로드 성공', title='결과', button='OK')
-            return send_file(path + request.form['file'],
-                    attachment_filename = request.form['file'],
-                    as_attachment=True) 
-        except:
-            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
-            return render_template('download.html', files=files_list)
-
-# 파일 삭제
-@app.route('/delete', methods = ['POST'])
-def delete_file():
-    files_list = os.listdir("./uploads")
-    if request.method == 'POST':
-        try:
-            path = "./uploads/"
-            os.remove(path+"{}".format(request.form['file']))
-            # pg.alert(text='삭제됐습니다', title='결과', button='OK')
-            files_list = os.listdir("./uploads")
-            return render_template('delete.html', files=files_list)
-        except:
-            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
-            return render_template('delete.html', files=files_list)
 
 # 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
