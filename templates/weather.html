@@ -9,7 +9,14 @@
 			}
 		</script>
 	</head>
-	
+	<style>
+
+	#layer1{
+		z-index:5
+	}
+
+
+	</style>
 
 	<body>
 		<center>
@@ -44,8 +51,8 @@
 
 			<img height="800px" width="1200px" src="{{ url_for('static', filename='./map.jpg') }}"/><br>
 			<!-- 강남구 -->
-			<a href ='/'>
-			<div style="left: 750px; bottom:160px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="cursor:pointer; left:750px; bottom:160px; width:450px; font-size:1em; font-weight:bold; position:absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='/weather/강남';">
 				{{data[0]['tmp']}}도/{{data[0]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[0]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -54,11 +61,10 @@
 				{% else %}
 					<img height='40px' width='40px' src="{{ url_for('static', filename='./gray2.png') }}"/>
 				{% endif %}
-				
 			</div>
-			</a>
 			<!-- 강동구 -->
-			<div style="left: 990px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 990px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='/weather'+ out(this.date);">
 				{{data[1]['tmp']}}도/{{data[1]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[1]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -69,7 +75,8 @@
 				{% endif %}
 			</div>
 			<!-- 강북구 -->
-			<div style="left: 650px; bottom:535px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 650px; bottom:535px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='/weather'+ out(this.date);">
 				{{data[2]['tmp']}}도/{{data[2]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[2]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -80,7 +87,8 @@
 				{% endif %}
 			</div>
 			<!-- 강서구 -->
-			<div style="left: 145px; bottom:330px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 145px; bottom:330px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='/weather/강서';">
 				{{data[3]['tmp']}}도/{{data[3]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[3]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -91,7 +99,8 @@
 				{% endif %}
 			</div>
 			<!-- 관악구 -->
-			<div style="left: 475px; bottom:70px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 475px; bottom:70px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[4]['tmp']}}도/{{data[4]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[4]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -102,7 +111,8 @@
 				{% endif %}
 			</div>
 			<!-- 광진구 -->
-			<div style="left: 840px; bottom:275px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 840px; bottom:275px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[5]['tmp']}}도/{{data[5]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[5]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -113,7 +123,8 @@
 				{% endif %}
 			</div>
 			<!-- 구로구 -->
-			<div style="left: 210px; bottom:140px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 210px; bottom:140px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[6]['tmp']}}도/{{data[6]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[6]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -124,7 +135,8 @@
 				{% endif %}
 			</div>
 			<!-- 금천구 -->
-			<div style="left: 345px; bottom:85px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 345px; bottom:85px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[7]['tmp']}}도/{{data[7]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[7]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -135,7 +147,8 @@
 				{% endif %}
 			</div>
 			<!-- 노원구 -->
-			<div style="left: 820px; bottom:560px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 820px; bottom:560px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[8]['tmp']}}도/{{data[8]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[8]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -146,7 +159,8 @@
 				{% endif %}
 			</div>
 			<!-- 도봉구 -->
-			<div style="left: 710px; bottom:600px; width: 440px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 710px; bottom:600px; width: 440px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[9]['tmp']}}도/{{data[9]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[9]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -157,7 +171,8 @@
 				{% endif %}
 			</div>
 			<!-- 동대문구 -->
-			<div style="left: 760px; bottom:380px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 760px; bottom:380px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[10]['tmp']}}도/{{data[10]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[10]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -168,7 +183,8 @@
 				{% endif %}
 			</div>
 			<!-- 동작구 -->
-			<div style="left: 475px; bottom:170px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 475px; bottom:170px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[11]['tmp']}}도/{{data[11]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[11]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -179,7 +195,8 @@
 				{% endif %}
 			</div>
 			<!-- 마포구 -->
-			<div style="left: 380px; bottom:325px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 380px; bottom:325px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[12]['tmp']}}도/{{data[12]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[12]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -190,7 +207,8 @@
 				{% endif %}
 			</div>
 			<!-- 서대문구 -->
-			<div style="left: 445px; bottom:365px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 445px; bottom:365px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[13]['tmp']}}도/{{data[13]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[13]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -201,7 +219,8 @@
 				{% endif %}
 			</div>
 			<!-- 서초구 -->
-			<div style="left: 640px; bottom:125px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 640px; bottom:125px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[14]['tmp']}}도/{{data[14]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[14]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -212,7 +231,8 @@
 				{% endif %}
 			</div>
 			<!-- 성동구 -->
-			<div style="left: 725px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 725px; bottom:300px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[15]['tmp']}}도/{{data[15]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[15]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -223,7 +243,8 @@
 				{% endif %}
 			</div>
 			<!-- 성북구 -->
-			<div style="left: 660px; bottom:438px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 660px; bottom:438px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[16]['tmp']}}도/{{data[16]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[16]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -234,7 +255,8 @@
 				{% endif %}
 			</div>
 			<!-- 송파구 -->
-			<div style="left: 900px; bottom:185px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 900px; bottom:185px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[17]['tmp']}}도/{{data[17]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[17]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -245,7 +267,8 @@
 				{% endif %}
 			</div>
 			<!-- 양천구 -->
-			<div style="left: 240px; bottom:213px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 240px; bottom:213px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[18]['tmp']}}도/{{data[18]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[18]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -256,7 +279,8 @@
 				{% endif %}
 			</div>
 			<!-- 영등포구 -->
-			<div style="left: 385px; bottom:220px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 385px; bottom:220px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[19]['tmp']}}도/{{data[19]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[19]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -267,7 +291,8 @@
 				{% endif %}
 			</div>
 			<!-- 용산구 -->
-			<div style="left: 565px; bottom:243px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 565px; bottom:243px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[20]['tmp']}}도/{{data[20]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[20]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -278,7 +303,8 @@
 				{% endif %}
 			</div>
 			<!-- 은평구 -->
-			<div style="left: 430px; bottom:495px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 430px; bottom:495px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[21]['tmp']}}도/{{data[21]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[21]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -289,7 +315,8 @@
 				{% endif %}
 			</div>
 			<!-- 종로구 -->
-			<div style="left: 565px; bottom:385px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 565px; bottom:385px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[22]['tmp']}}도/{{data[22]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[22]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -300,7 +327,8 @@
 				{% endif %}
 			</div>
 			<!-- 중구 -->
-			<div style="left: 605px; bottom:322px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 605px; bottom:322px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[23]['tmp']}}도/{{data[23]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[23]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>
@@ -311,7 +339,8 @@
 				{% endif %}
 			</div>
 			<!-- 중랑구 -->
-			<div style="left: 868px; bottom:420px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);">
+			<div id="layer1" style="left: 868px; bottom:420px; width: 450px;  font-size: 1em; font-weight: bold; position: absolute; color:rgb(124, 122, 122);"
+			onclick="window.location.href='http://www.naver.com/';">
 				{{data[24]['tmp']}}도/{{data[24]['rain']}}%<br>&nbsp;&nbsp;
 				{% if data[24]['sky'] == 'sunny' %}
 					<img height='25px' width='25px' src="{{ url_for('static', filename='./sunny.png') }}"/>

@@ -9,19 +9,19 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from lib import weather_db, weather_local
 # import pyautogui as pg
-from lib import weather_db, weather_local, speech_tts, speech_stt
+# from lib import weather_db, weather_local, speech_tts, speech_stt
 import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao, json, requests
 global db, cursor
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
 
-sys.path.append(cfg.OPENPIBO_PATH + '/edu')
-from pibo import Edu_Pibo
+# sys.path.append(cfg.OPENPIBO_PATH + '/edu')
+# from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
-pibo = Edu_Pibo()
+# pibo = Edu_Pibo()
 count = 0
 
 """                    템플릿 부분                    """
@@ -184,9 +184,14 @@ def kakao_check_friend():
 # 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
 def weather_user_date(user_date):
+    global weather
     ctime, count = count_time()
     weather = now_weather(user_date)
     return render_template('weather.html', data = weather, date = user_date, time = ctime, count = count)
+
+# @app.rotue('/weather_send/<user_date>/send', methods=['GET', 'POST'])
+# def weather_send(user_date):
+    
 
 # 날씨
 @app.route('/weather', methods=['GET', 'POST'])
@@ -296,10 +301,10 @@ def pibo_welcome(num):
     pibo.set_motion('welcome', num)
 
 if __name__ == '__main__': 
-    pibo_reset()
-    speech_tts.tts_test('서버를 실행하겠습니다.')
+    # pibo_reset()
+    # speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
-    device_thread_test()
+    # device_thread_test()
 
     # app.run(debug = False, port = 8000)
     app.run(host = '0.0.0.0', debug = False, port = 8000)
