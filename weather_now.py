@@ -1,11 +1,5 @@
-#####################################################
-#####################################################
-# 지금 현재의 기상예보를 DB에 넣어줌과 동시에 사용자가 호출한 시간도 넣음
-
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode, unquote, quote_plus
-# quote - URL에 있는 한글을 자동으로 아스키 값으로 변환시킴
-# unquote - 반대로 사람이 읽을 수 있는 값으로 변환시킴
 from datetime import datetime
 import json
 import pymysql
@@ -112,30 +106,71 @@ def send_data_user(local, x, y):
     db.close()
     return weather_data
 
+def send_data_selected(local, x, y, time):
+    data = []
+    weather_data=[]
+    db, cursor = weather_db.db_connecting('root', 'qwe123')
+    cursor.execute("SELECT * FROM seoul WHERE local = '"+local+"' AND date = '"+time+"';")
+    for i in cursor:
+        data.append(i)
+    for j in data[0].values():
+        weather_data.append(j)
+    cleaned_data = {}
+    cleaned_data['기준시간'] = weather_data[1]
+    cleaned_data['지역'] = weather_data[0]
+    cleaned_data['기온'] = weather_data[2]
+    cleaned_data['강수량'] = weather_data[3]
+    cleaned_data['하늘'] = weather_data[4]
+
+    return cleaned_data
+
+
 def weather_to_speak(local):
     flag = 0
     speak = []
     speak = '기온은 ' + weather_data['기온'] + '도이고                       '
-    speak += '습도는 ' + weather_data['습도'] + '퍼센트야                     '
+    speak += '습도는 ' + weather_data['습도'] + '퍼센트입니다                                  '
     if weather_data['상태'] == 'rain' :
-        speak += '현재 비가 내리고 있는데                      '
+        speak += '            현재 비가 내리고 있는데                      '
         flag = 1
     elif weather_data['상태'] == 'snow' :
-        speak += '현재 눈이 내리고 있는데                        '
+        speak += '             현재 눈이 내리고 있는데                        '
         flag = 1
     elif weather_data['상태'] == 'mist' :
-        speak += '현재 부슬비가 내리고 있는데                          '
+        speak += '             현재 부슬비가 내리고 있는데                          '
         flag = 1
     else:
-        speak += '현재 내리고 있는건 없어                             '
+        speak += '         현재 내리고 있는건 없습니다                             '
 
     if ((flag == 1) and (weather_data['강수량']) != '0'):
-        speak += '강수량은 ' + weather_data['강수량'] + '밀리미터야                    '
+        speak += '강수량은 ' + weather_data['강수량'] + '밀리미터입니다                    '
+    return str(speak)
+
+def weather_to_speak_selected(local, time):
+    data = []
+    speak = []
+    weather_data=[]
+    db, cursor = weather_db.db_connecting('root', 'qwe123')
+    cursor.execute("SELECT * FROM seoul WHERE local = '"+local+"' AND date = '"+time+"';")
+    for i in cursor:
+        data.append(i)
+    for j in data[0].values():
+        weather_data.append(j)
+    speak = []
+    speak = '기온은 ' + str(weather_data[2]) + '도이고                               '
+    speak += '강수확률은 ' + str(weather_data[3]) + '퍼센트입니다                                            '
+    if weather_data[4] == 'sunny' : 
+        speak += '               하늘은 맑을 예정이에요'
+    elif weather_data[4] == 'cloduy' :
+        speak += '              하늘은 구름이 낄 예정이에요'
+    else:
+        speak += '                 하늘은 흐릴 예정이에요'
     return str(speak)
 
 if __name__ == "__main__":
-    local, x, y = weather_local.find_user_location()
-    send_data_user(local, x, y)
+    # local, x, y = weather_local.find_user_location()
+    # send_data_user(local, x, y)
+    print(weather_to_speak_selected('중랑구', '20211014-1900'))
     print('data finished')
 
 

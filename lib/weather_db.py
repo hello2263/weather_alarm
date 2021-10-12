@@ -7,8 +7,6 @@ def db_connecting(id, key):
                          user=id, password=key, charset="utf8", port=831)
     cursor = db.cursor(pymysql.cursors.DictCursor)
     cursor.execute('USE weather;')
-    # if (cursor.execute("show status like 'Threads_connected';") == 1):
-    #     print('db Connected')
     return db, cursor
 
 def nowtime():

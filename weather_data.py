@@ -1,11 +1,5 @@
-#####################################################
-#####################################################
-# 실행할 경우 DB에 3일간의 일기예보를 저장함
-
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode, unquote, quote_plus
-# quote - URL에 있는 한글을 자동으로 아스키 값으로 변환시킴
-# unquote - 반대로 사람이 읽을 수 있는 값으로 변환시킴
 from datetime import datetime
 import json
 from lib import weather_db, weather_local

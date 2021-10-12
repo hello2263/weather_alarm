@@ -9,19 +9,19 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from lib import weather_db, weather_local
 # import pyautogui as pg
-# from lib import weather_db, weather_local, speech_tts, speech_stt
+from lib import weather_db, weather_local, speech_tts, speech_stt
 import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao, json, requests
 global db, cursor, flag_weather
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
 
-# sys.path.append(cfg.OPENPIBO_PATH + '/edu')
-# from pibo import Edu_Pibo
+sys.path.append(cfg.OPENPIBO_PATH + '/edu')
+from pibo import Edu_Pibo
 
 app = Flask(__name__) 
 api = Api(app)
-# pibo = Edu_Pibo()
+pibo = Edu_Pibo()
 count = 0
 
 
@@ -122,26 +122,6 @@ def kakao_friends_login():
 @app.route('/kakao/oauth?code=<code>')
 def oatuh(code):
     print(code)
-    # global user_code
-    # code = str(request.args.get('code'))
-    # url = "https://kauth.kakao.com/oauth/token"
-    # payload = "grant_type=authorization_code&client_id=0a8a356679801891a01bdc324ec32d77&redirect_uri=https%3A%2F%2F127.0.0.1%3A8000%2Foauth&code="+str(code)
-    # headers = {
-    #     'Content-Type': "application/x-www-form-urlencoded",
-    #     'Cache-Control': "no-cache",
-    # }
-    # response = requests.request("POST", url, data=payload, headers=headers)
-    # access_token = json.loads(((response.text).encode('utf-8')))['access_token']
-    # print(response.text)
-     
-    # url = "https://kapi.kakao.com/v1/user/signup"
-    # headers.update({'Authorization' : "Bearer " + str(access_token)})
-    # response = requests.request("POST", url, headers=headers)
-    # print(response.text)
-    
-    # url = "https://kapi.kakao.com/v2/user/me"
-    # response = requests.request("POST", url, headers=headers)
-    # print(response.text)
     return render_template('kakao.html')
 
 @app.route('/check_me', methods = ['POST', 'GET'])
@@ -185,9 +165,10 @@ def kakao_check_friend():
 # 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
 def weather_user_date(user_date):
-    global receive_date
+    global receive_date, select_flag
     ctime, count = count_time()
     receive_date = user_date
+    select_flag = 1
     weather = now_weather(user_date)
     return render_template('weather.html', data = weather, date = user_date, time = ctime, count = count)
 
@@ -196,34 +177,44 @@ def weather_send_display(user_local):
     global select_local
     friends_list = weather_kakao.kakao_freinds_display()
     select_local = user_local
-    if select_date
-        return render_template('weather_send.html' , date = select_date, local = user_local, friends=friends_list)
-    else :
+    if select_flag == 1:
         return render_template('weather_send.html' , date = receive_date, local = user_local, friends=friends_list)
+    else :
+        return render_template('weather_send.html' , date = select_date, local = user_local, friends=friends_list)
 
 @app.route('/weather_select_send', methods=['GET', 'POST'])
 def weather_send():
     friend = request.form['name']
-    print(friend)
-    print(select_local)
     x, y = weather_local.find_speak_location(select_local)
-    weather = weather_now.send_data_user(select_local, x, y)
-    print(weather)
-    if friend == 'pibo':
-        speech_tts.tts_test(select_local+'의 현재 날씨를 말해줄게')
-        speech_tts.tts_test(weather_now.weather_to_speak(select_local))
-    else:
-        weather_kakao.kakao_friends_send(weather, friend)
-    return render_template('home.html')
+    if select_flag == 1:
+        if friend == 'pibo':
+            day = receive_date[6:8]
+            time = receive_date[9:11]
+            speech_tts.tts_test(day+'일'+time+'시        '+select_local+'의 기상예보를 말해드릴게요            ')
+            speech_tts.tts_test(weather_now.weather_to_speak_selected(select_local, receive_date))
+        else:
+            weather = weather_now.send_data_selected(select_local, x, y, receive_date)
+            weather_kakao.kakao_friends_send(weather, friend)
+        return render_template('home.html')
+
+    else :
+        if friend == 'pibo':
+            weather_now.send_data_user(select_local, x, y)
+            speech_tts.tts_test(select_local+'의 현재 날씨를 말해드릴게요')
+            speech_tts.tts_test(weather_now.weather_to_speak(select_local))
+        else:
+            weather = weather_now.send_data_user(select_local, x, y)
+            weather_kakao.kakao_friends_send(weather, friend)
+        return render_template('home.html')
 
 # 날씨
 @app.route('/weather', methods=['GET', 'POST'])
 def weather_alarm():
-    global select_date, send_date, flag_weather
+    global select_date, send_date, flag_weather, select_flag
+    select_flag = 0
     ctime, count = count_time()
     select_date = weather_db.nowtime()
     weather = now_weather(select_date)
-    # today_time = weather_data.set_date()
     return render_template('weather.html', data = weather, date = select_date, time = ctime, count = count)
 
 def now_weather(time): # html로 각 구의 기상을 담고있는 리스트 안의 딕셔너리를 만들어주는 함수
@@ -270,28 +261,28 @@ def speak_to_user(): # Pibo가 user에게 날씨 말해줌
             if  ('황도규' in sentence) or ('나' in sentence):
                 weather = weather_now.send_data_user(local, x, y)
                 weather_kakao.kakao_me_send(weather)
-                speech_tts.tts_test('나한테 카톡으로 보냈어')
+                speech_tts.tts_test('나한테 카톡으로 보냈습니다')
                 pibo_reset()
 
             else:
                 weather = weather_now.send_data_user(local, x, y)
                 weather_kakao.kakao_friends_send(weather, sentence)
-                speech_tts.tts_test(sentence+'에게 카톡으로 보냈어')
+                speech_tts.tts_test(sentence+'에게 카톡으로 보습니다')
                 pibo_reset()
 
             
         else:
-            speech_tts.tts_test('카톡으로 보낼 지역을 찾지 못했어')
+            speech_tts.tts_test('카톡으로 보낼 지역을 찾지 못했습니다')
             pibo_reset()
 
     else:
         if (x and y) != 0:
             weather_now.send_data_user(local, x, y)
-            speech_tts.tts_test(local+'의 현재 날씨를 말해줄게')
+            speech_tts.tts_test(local+'의 현재 날씨를 말해드리겠습니다')
             speech_tts.tts_test(weather_now.weather_to_speak(local))
             pibo_reset()
         else:
-            speech_tts.tts_test('원하는 지역을 찾지 못했어')
+            speech_tts.tts_test('원하는 지역을 찾지 못했습니다')
             pibo_reset()
 
 
@@ -325,15 +316,14 @@ def pibo_welcome(num):
     pibo.set_motion('welcome', num)
 
 if __name__ == '__main__': 
-    # pibo_reset()
-    # speech_tts.tts_test('서버를 실행하겠습니다.')
+    pibo_reset()
+    speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
-    # device_thread_test()
+    device_thread_test()
 
     # app.run(debug = False, port = 8000)
     app.run(host = '0.0.0.0', debug = False, port = 8000)
 
-    # html을 파이보와 연계되게 날씨 누르면 파이보에서 대답 
 
 
     
