@@ -200,7 +200,19 @@ def kakao_friends_read():
         db.commit()
         print(friend['profile_nickname']+"success")
     db.close()
-
+    
+def kakao_freinds_display():
+    db, cursor = weather_db.db_connecting('root', 'qwe123')
+    list = []
+    friends = []
+    cursor.execute("SELECT name FROM friends")
+    for i in cursor:
+        list.append(i)
+    for i in list:
+        friends.append(i['name'])
+    db.close()
+    return friends
+    
 if __name__=='__main__':
     # local, x, y = weather_local.find_user_location()
     # weather = weather_now.send_data_user(local, x, y)

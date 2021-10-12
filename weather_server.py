@@ -11,7 +11,7 @@ from lib import weather_db, weather_local
 # import pyautogui as pg
 # from lib import weather_db, weather_local, speech_tts, speech_stt
 import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_now, weather_kakao, json, requests
-global db, cursor
+global db, cursor, flag_weather
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from utils.config import Config as cfg
@@ -23,6 +23,7 @@ app = Flask(__name__)
 api = Api(app)
 # pibo = Edu_Pibo()
 count = 0
+
 
 """                    템플릿 부분                    """
 # 홈
@@ -184,23 +185,46 @@ def kakao_check_friend():
 # 유저의 날짜선택
 @app.route('/weather/<user_date>', methods=['GET', 'POST'])
 def weather_user_date(user_date):
-    global weather
+    global receive_date
     ctime, count = count_time()
+    receive_date = user_date
     weather = now_weather(user_date)
     return render_template('weather.html', data = weather, date = user_date, time = ctime, count = count)
 
-# @app.rotue('/weather_send/<user_date>/send', methods=['GET', 'POST'])
-# def weather_send(user_date):
-    
+@app.route('/weather/local/<user_local>', methods=['GET', 'POST'])
+def weather_send_display(user_local):
+    global select_local
+    friends_list = weather_kakao.kakao_freinds_display()
+    select_local = user_local
+    if select_date
+        return render_template('weather_send.html' , date = select_date, local = user_local, friends=friends_list)
+    else :
+        return render_template('weather_send.html' , date = receive_date, local = user_local, friends=friends_list)
+
+@app.route('/weather_select_send', methods=['GET', 'POST'])
+def weather_send():
+    friend = request.form['name']
+    print(friend)
+    print(select_local)
+    x, y = weather_local.find_speak_location(select_local)
+    weather = weather_now.send_data_user(select_local, x, y)
+    print(weather)
+    if friend == 'pibo':
+        speech_tts.tts_test(select_local+'의 현재 날씨를 말해줄게')
+        speech_tts.tts_test(weather_now.weather_to_speak(select_local))
+    else:
+        weather_kakao.kakao_friends_send(weather, friend)
+    return render_template('home.html')
 
 # 날씨
 @app.route('/weather', methods=['GET', 'POST'])
 def weather_alarm():
+    global select_date, send_date, flag_weather
     ctime, count = count_time()
-    time = weather_db.nowtime()
-    weather = now_weather(time)
+    select_date = weather_db.nowtime()
+    weather = now_weather(select_date)
     # today_time = weather_data.set_date()
-    return render_template('weather.html', data = weather, date = time, time = ctime, count = count)
+    return render_template('weather.html', data = weather, date = select_date, time = ctime, count = count)
 
 def now_weather(time): # html로 각 구의 기상을 담고있는 리스트 안의 딕셔너리를 만들어주는 함수
     count = 0
