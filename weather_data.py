@@ -5,7 +5,7 @@ import json
 from lib import weather_db, weather_local
 global today_date, x, y
 
-def set_date(): # 기상청 API를 받아오는 시간대를 설정해주는 함수
+def set_date(): 
     global today_time, today_date
     now = datetime.now()
     today_time = int(str(now.hour)+str(now.minute))
@@ -43,7 +43,7 @@ def set_date(): # 기상청 API를 받아오는 시간대를 설정해주는 함
     return today_date + '-' + today_time # 20210905-1400
 
         
-def get_data(): # 기상청에서 JSON으로 받기위한 파라미터들
+def get_data(): 
     CallBackURL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
     params = '?' + urlencode({
         quote_plus("serviceKey"): 'XIjRFoewvUDp4EDhRpATADoatwElkiQ%2F1J0tDooGjBTKStjRtuW3Zu89iE9cBsK%2Bz299IJwkbaE%2F%2F7SzcVo2yA%3D%3D',
@@ -64,9 +64,9 @@ def get_data(): # 기상청에서 JSON으로 받기위한 파라미터들
     item_data = data['response']['body']['items']['item']
     return item_data
 
-def send_data(local): # DB에 데이터를 보내는 함수
+def send_data(local):
     count = 0
-    weather_data = dict() # 조회한 오늘 날씨 정보의 그릇
+    weather_data = dict() 
     item_data = get_data()
     for item in item_data:
         weather_data['지역'] = str(local)
