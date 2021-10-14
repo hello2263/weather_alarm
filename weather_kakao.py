@@ -1,9 +1,9 @@
 import requests, json
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
-from lib import weather_local, weather_db
+from lib import weather_local, weather_db, weather_now
 from flask import request
-import webbrowser, selenium, weather_now
+import webbrowser, selenium
 from selenium import webdriver
 
 
