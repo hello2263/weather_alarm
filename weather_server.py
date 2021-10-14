@@ -60,10 +60,8 @@ def upload_file():
         try:
             f = request.files['file']
             f.save('./uploads/' + secure_filename(f.filename)) # 파일명을 보호하기위한 함수, 지정된 경로에 파일 저장
-            # pg.alert(text='업로드 성공', title='결과', button='OK')
             return render_template('upload.html')
         except:
-            # pg.alert(text='업로드에 실패했습니다', title='결과', button='OK')
             return render_template('upload.html')
     else:
         return render_template('upload.html')
@@ -79,12 +77,10 @@ def download_file():
                 sw=1
         try:
             path = "./uploads/"
-            # pg.alert(text='다운로드 성공', title='결과', button='OK')
             return send_file(path + request.form['file'],
                     download_name = request.form['file'],
                     as_attachment=True)
         except:
-            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
             print("download error")
     return render_template('download.html', files=files_list)
 
@@ -96,11 +92,9 @@ def delete_file():
         try:
             path = "./uploads/"
             os.remove(path+"{}".format(request.form['file']))
-            # pg.alert(text='삭제됐습니다', title='결과', button='OK')
             files_list = os.listdir("./uploads")
             return render_template('delete.html', files=files_list)
         except:
-            # pg.alert(text='파일명을 확인해주세요', title='결과', button='OK')
             return render_template('delete.html', files=files_list)
     else:
         return render_template('delete.html', files=files_list)
@@ -217,6 +211,12 @@ def weather_alarm():
     weather = now_weather(select_date)
     return render_template('weather.html', data = weather, date = select_date, time = ctime, count = count)
 
+@app.route('/bot_time', methods=['GET', 'POST'])
+def bot_time():
+    if request.method == 'POST':
+        print(request.form['time'])
+    return render_temlpate('weather.html')
+
 def now_weather(time): # html로 각 구의 기상을 담고있는 리스트 안의 딕셔너리를 만들어주는 함수
     count = 0
     weather = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
@@ -317,7 +317,7 @@ def pibo_welcome(num):
 
 if __name__ == '__main__': 
     pibo_reset()
-    speech_tts.tts_test('서버를 실행하겠습니다.')
+    # speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
     device_thread_test()
 
@@ -325,12 +325,11 @@ if __name__ == '__main__':
     app.run(host = '0.0.0.0', debug = False, port = 8000)
 
 
-
+    # 개선점
     # 카톡 코드화면 고치기
-    # 알림 창
 
 
-
+    # 업그레이드
     # 카카오톡 채널과 연계
     # AWS 올리기
 
