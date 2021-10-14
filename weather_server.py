@@ -9,8 +9,8 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 # from lib import weather_db, weather_local
 # import pyautogui as pg
-from lib import weather_db, weather_local, speech_tts, speech_stt, weather_now
-import werkzeug, os, sys, time, ctypes, threading, weather_data, weather_kakao, json, requests
+from lib import weather_db, weather_local, speech_tts, speech_stt, weather_now, weather_kakao
+import werkzeug, os, sys, time, ctypes, threading, weather_data, json, requests
 global db, cursor, flag_weather
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
