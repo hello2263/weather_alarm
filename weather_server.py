@@ -317,7 +317,7 @@ def pibo_welcome(num):
 
 if __name__ == '__main__': 
     pibo_reset()
-    # speech_tts.tts_test('서버를 실행하겠습니다.')
+    speech_tts.tts_test('서버를 실행하겠습니다.')
     db, cursor = weather_db.db_connecting('root', 'qwe123')
     device_thread_test()
 
